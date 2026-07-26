@@ -330,14 +330,8 @@ export default function DashboardOverview() {
           color="amber"
           description="Achieved milestones based on downlines"
         />
-        <StatsCard
-          title="KYC Status Badge"
-          value={user?.kyc?.status === "approved" ? "Verified" : user?.kyc?.status === "pending" ? "Pending Approval" : "ID Required"}
-          icon={Shield}
-          color="blue"
-          description="Submit government ID under Profile to verify"
-        />
       </div>
+
 
       {/* Active Plans Section */}
       {myPlans.length > 0 && (
