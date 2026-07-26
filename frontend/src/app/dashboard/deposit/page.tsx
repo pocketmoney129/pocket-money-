@@ -606,14 +606,15 @@ export default function DepositPage() {
               </button>
             </div>
 
-            {/* Scrollable Terms Content */}
-            <div className="overflow-y-auto space-y-3.5 pr-2 text-xs text-zinc-300 font-light leading-relaxed custom-scrollbar flex-1">
+            {/* Scrollable Terms Content - Single clean text flow without separate boxes or white borders */}
+            <div className="overflow-y-auto space-y-4 pr-2 text-xs text-zinc-300 font-normal leading-relaxed custom-scrollbar flex-1">
               {termsParagraphs.map((para, idx) => (
-                <p key={idx} className="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-850/60 leading-relaxed text-zinc-300">
+                <p key={idx} className="text-zinc-300 leading-relaxed">
                   {para}
                 </p>
               ))}
             </div>
+
 
             {/* Modal Footer Actions */}
             <div className="pt-3 border-t border-zinc-900 flex justify-end gap-3 shrink-0">
