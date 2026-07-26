@@ -202,17 +202,17 @@ export default function WithdrawPage() {
                       disabled={user?.status !== "active" || user?.kyc?.status !== "approved" || !hasBankDetails}
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all disabled:opacity-50"
+                      className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm transition-all disabled:opacity-50"
                     />
                   </div>
 
                   {/* Calculations Preview */}
-                  <div className="bg-zinc-900 border border-zinc-850 rounded-2xl p-4 flex flex-col justify-center space-y-2">
-                    <div className="flex justify-between text-xs text-zinc-550 font-semibold">
+                  <div className="bg-zinc-900/80 rounded-2xl p-4 flex flex-col justify-center space-y-2">
+                    <div className="flex justify-between text-xs text-zinc-400 font-semibold">
                       <span>Withdrawal Fee ({chargePercent}%):</span>
                       <span>₹{computedCharge.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between text-xs font-bold text-white border-t border-zinc-850 pt-2">
+                    <div className="flex justify-between text-xs font-bold text-white border-t border-zinc-800/80 pt-2">
                       <span>Net Payout Amount:</span>
                       <span className="text-emerald-400">₹{numAmount > 0 ? computedNet.toLocaleString() : "0"}</span>
                     </div>
@@ -222,7 +222,7 @@ export default function WithdrawPage() {
                 <div>
                   <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Receiving Destination details</label>
                   {hasBankDetails ? (
-                    <div className="bg-zinc-900 border border-zinc-850 rounded-2xl p-4 text-xs text-zinc-350 font-semibold space-y-1">
+                    <div className="bg-zinc-900/80 rounded-2xl p-4 text-xs text-zinc-350 font-semibold space-y-1">
                       <p>Holder Name: <strong className="text-white">{bd?.holderName}</strong></p>
                       {bd?.upiId ? (
                         <p>UPI ID: <strong className="text-[#ef233c] font-mono">{bd.upiId}</strong></p>
@@ -230,6 +230,7 @@ export default function WithdrawPage() {
                         <p>Account: <strong className="text-[#ef233c] font-mono">{bd?.accountNumber}</strong> ({bd?.bankName})</p>
                       )}
                     </div>
+
                   ) : (
                     <p className="text-xs text-zinc-550 font-semibold italic">Configure bank details in profile to view here.</p>
                   )}

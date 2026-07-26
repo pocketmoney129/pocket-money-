@@ -507,7 +507,7 @@ export default function DepositPage() {
                   <form onSubmit={handleSubmitDeposit} className="space-y-5">
                     <div>
                       <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Required Amount</label>
-                      <div className="w-full px-4 py-3 rounded-xl bg-zinc-900/60 text-white font-black text-base border border-zinc-850 tracking-wider">
+                      <div className="w-full px-4 py-3 rounded-xl bg-zinc-900/80 text-white font-black text-base border-none tracking-wider">
                         ₹{selectedPackage.price.toLocaleString()}
                       </div>
                     </div>
@@ -520,13 +520,14 @@ export default function DepositPage() {
                         placeholder="Enter 12-digit transaction ID"
                         value={transactionReference}
                         onChange={(e) => setTransactionReference(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-655 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm font-semibold tracking-wider font-mono transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm font-semibold tracking-wider font-mono transition-all"
                       />
                     </div>
 
                     <div>
                       <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Payment Receipt Screenshot</label>
-                      <div className="border-2 border-dashed border-zinc-850 rounded-2xl p-4 hover:bg-zinc-900 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative">
+                      <div className="border border-zinc-850/60 rounded-2xl p-4 bg-zinc-900/40 hover:bg-zinc-900 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative">
+
                         <input
                           type="file"
                           accept="image/*"

@@ -204,21 +204,21 @@ export default function ProfilePage() {
             </h3>
 
             <div className="grid sm:grid-cols-2 gap-4 text-xs font-semibold text-zinc-350">
-              <div className="bg-zinc-900 border border-zinc-850 p-3 rounded-xl">
-                <span className="text-[10px] text-zinc-550 uppercase tracking-wider block">Full Name</span>
+              <div className="bg-zinc-900/80 p-3.5 rounded-2xl">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider block font-bold">Full Name</span>
                 <span className="text-white text-sm font-black mt-1 block">{user?.name}</span>
               </div>
-              <div className="bg-zinc-900 border border-zinc-850 p-3 rounded-xl">
-                <span className="text-[10px] text-zinc-550 uppercase tracking-wider block">Username</span>
-                <span className="text-[#ef233c] text-sm font-black mt-1 block">@{user?.username}</span>
+              <div className="bg-zinc-900/80 p-3.5 rounded-2xl">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider block font-bold">Username</span>
+                <span className="text-[#ef233c] text-sm font-black mt-1 block font-mono">@{user?.username}</span>
               </div>
-              <div className="bg-zinc-900 border border-zinc-850 p-3 rounded-xl">
-                <span className="text-[10px] text-zinc-550 uppercase tracking-wider block">Email Address</span>
+              <div className="bg-zinc-900/80 p-3.5 rounded-2xl">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider block font-bold">Email Address</span>
                 <span className="text-white text-sm font-black mt-1 block">{user?.email}</span>
               </div>
-              <div className="bg-zinc-900 border border-zinc-850 p-3 rounded-xl">
-                <span className="text-[10px] text-zinc-550 uppercase tracking-wider block">Phone Number</span>
-                <span className="text-white text-sm font-black mt-1 block">{user?.phone}</span>
+              <div className="bg-zinc-900/80 p-3.5 rounded-2xl">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider block font-bold">Phone Number</span>
+                <span className="text-white text-sm font-black mt-1 block font-mono">{user?.phone}</span>
               </div>
             </div>
           </div>
@@ -234,67 +234,68 @@ export default function ProfilePage() {
 
             <form onSubmit={handleBankSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase text-zinc-450 mb-2">Account Holder Name</label>
+                <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Account Holder Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. John Doe"
                   value={holderName}
                   onChange={(e) => setHolderName(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm transition-all"
                 />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">Bank Name</label>
+                  <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Bank Name</label>
                   <input
                     type="text"
                     placeholder="e.g. Federal Union Bank"
                     value={bankName}
                     onChange={(e) => setBankName(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-zinc-855 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">IFSC Code / Routing</label>
+                  <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">IFSC Code / Routing</label>
                   <input
                     type="text"
                     placeholder="e.g. FUB0001234"
                     value={ifsc}
                     onChange={(e) => setIfsc(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-zinc-855 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm font-semibold tracking-wider font-mono transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm font-semibold tracking-wider font-mono transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">Bank Account Number</label>
+                <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Bank Account Number</label>
                 <input
                   type="text"
                   placeholder="Enter Bank Account Number"
                   value={accountNumber}
                   onChange={(e) => setAccountNumber(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-zinc-855 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm font-semibold font-mono transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm font-semibold font-mono transition-all"
                 />
               </div>
 
               <div className="relative flex py-4 items-center">
                 <div className="flex-grow border-t border-zinc-900" />
-                <span className="flex-shrink mx-4 text-zinc-550 text-[10px] font-bold uppercase tracking-wider font-mono">Or UPI Route</span>
+                <span className="flex-shrink mx-4 text-zinc-500 text-[10px] font-bold uppercase tracking-wider font-mono">Or UPI Route</span>
                 <div className="flex-grow border-t border-zinc-900" />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">UPI ID</label>
+                <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">UPI ID</label>
                 <input
                   type="text"
                   placeholder="e.g. name@upi"
                   value={upiId}
                   onChange={(e) => setUpiId(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-zinc-855 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm font-semibold text-emerald-450 font-mono transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm font-semibold text-emerald-400 font-mono transition-all"
                 />
               </div>
+
 
               <button
                 type="submit"
