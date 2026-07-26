@@ -16,7 +16,9 @@ import {
   LifeBuoy,
   LogOut,
   User,
-  X
+  X,
+  ShieldCheck,
+  Award
 } from "lucide-react";
 
 interface SidebarProps {
@@ -40,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   ];
 
   return (
-    <div className="h-full flex flex-col bg-zinc-950 text-slate-350 w-64 border-r border-zinc-900">
+    <div className="h-full flex flex-col bg-zinc-950 text-slate-350 w-64 border-r border-zinc-900 font-sans">
       {/* Header */}
       <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-900">
         <Link href="/" className="flex items-center gap-2 group">
@@ -58,19 +60,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         )}
       </div>
 
-      {/* User Info */}
-      <div className="px-6 py-5 border-b border-zinc-900 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-850 flex items-center justify-center text-zinc-300">
+      {/* User Info with KYC & Active Member Badges below User ID */}
+      <div className="px-5 py-4 border-b border-zinc-900 flex items-start gap-3">
+        <div className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-850 flex items-center justify-center text-zinc-300 shrink-0 mt-0.5">
           <User size={18} />
         </div>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden space-y-1 min-w-0">
           <p className="text-sm font-bold text-white truncate font-manrope">{user?.name}</p>
           <p className="text-xs text-zinc-400 font-mono font-semibold truncate">@{user?.username || user?.referralCode}</p>
+
+          {/* Badges directly below User ID */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            {/* KYC Status Badge */}
+            <span
+              title={user?.kyc?.status === "approved" ? "KYC Approved" : "KYC Pending"}
+              className={`inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${
+                user?.kyc?.status === "approved"
+                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                  : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+              }`}
+            >
+              <ShieldCheck size={11} className="shrink-0" />
+              <span>{user?.kyc?.status === "approved" ? "KYC Approved" : "KYC Pending"}</span>
+            </span>
+
+            {/* Active Member Status Badge */}
+            <span
+              title={user?.status === "active" ? "Active Member" : "Inactive Member"}
+              className={`inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${
+                user?.status === "active"
+                  ? "bg-[#ef233c]/10 text-[#ef233c] border-[#ef233c]/20"
+                  : "bg-zinc-900 text-zinc-500 border-zinc-800"
+              }`}
+            >
+              <Award size={11} className="shrink-0" />
+              <span>{user?.status === "active" ? "Active Member" : "Inactive"}</span>
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Nav Menu */}
-      <nav className="flex-1 px-4 py-5 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.path;
           const Icon = item.icon;
