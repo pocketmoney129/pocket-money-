@@ -101,30 +101,18 @@ export default function DashboardOverview() {
   const [faqOpenIndex, setFaqOpenIndex] = useState<number | null>(null);
   const [chartPeriod, setChartPeriod] = useState<"weekly" | "monthly">("weekly");
 
-  const fetchDashboardData = async () => {
-    try {
-      setLoadingStats(true);
-      const [statsRes, pkgsRes, txsRes, plansRes] = await Promise.all([
-        api.get("/transactions/summary"),
-        api.get("/user/packages"),
-        api.get("/transactions?limit=5"),
-        api.get("/user/my-plans")
-      ]);
-
-      if (statsRes.success) setStats(statsRes.data);
-      if (pkgsRes.success) setPackages(pkgsRes.data);
-      if (txsRes.success) setRecentTxs(txsRes.data.transactions);
-      if (plansRes.success) setMyPlans(plansRes.data.activePlans || []);
-    } catch (error) {
-      console.error("Error loading dashboard metrics:", error);
-    } finally {
-      setLoadingStats(false);
-    }
+  const fetchDashboardData = () => {
+    // Non-blocking parallel background data fetching for instant 0ms page load
+    api.get("/transactions/summary").then(res => { if (res.success) setStats(res.data); }).catch(() => {});
+    api.get("/user/packages").then(res => { if (res.success) setPackages(res.data); }).catch(() => {});
+    api.get("/transactions?limit=5").then(res => { if (res.success) setRecentTxs(res.data.transactions || []); }).catch(() => {});
+    api.get("/user/my-plans").then(res => { if (res.success) setMyPlans(res.data.activePlans || []); }).catch(() => {});
   };
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
 
   const copyReferralLink = () => {
     if (typeof window !== "undefined" && user?.referralCode) {
@@ -228,16 +216,9 @@ export default function DashboardOverview() {
     }
   ];
 
-  if (loadingStats) {
-    return (
-      <div className="flex justify-center items-center py-32 font-sans">
-        <Loader2 className="animate-spin text-[#ef233c]" size={36} />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-8 font-sans text-zinc-350 relative pb-12">
+
 
       {/* Floating Ambient background blur */}
       <div className="absolute top-12 left-10 w-[350px] h-[350px] bg-[#ef233c]/5 rounded-full blur-[120px] pointer-events-none" />
