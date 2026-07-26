@@ -52,6 +52,14 @@ export default function WalletHistory() {
     return badges[type] || "bg-zinc-900 text-zinc-400 border-zinc-850";
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-32 font-sans">
+        <Loader2 className="animate-spin text-[#ef233c]" size={36} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 font-sans text-zinc-300 relative">
       <div className="flex justify-between items-center pb-4 border-b border-zinc-900">
@@ -62,11 +70,8 @@ export default function WalletHistory() {
       </div>
 
       <div className="bg-zinc-950 rounded-3xl p-6 border border-zinc-900 shadow-[0_0_20px_rgba(239,35,60,0.01)]">
-        {loading ? (
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="animate-spin text-[#ef233c]" size={28} />
-          </div>
-        ) : transactions.length === 0 ? (
+        {transactions.length === 0 ? (
+
           <p className="text-sm text-zinc-550 font-semibold py-12 text-center">No transaction records found.</p>
         ) : (
           <div className="space-y-6">

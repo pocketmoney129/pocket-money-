@@ -228,8 +228,17 @@ export default function DashboardOverview() {
     }
   ];
 
+  if (loadingStats) {
+    return (
+      <div className="flex justify-center items-center py-32 font-sans">
+        <Loader2 className="animate-spin text-[#ef233c]" size={36} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 font-sans text-zinc-350 relative pb-12">
+
       {/* Floating Ambient background blur */}
       <div className="absolute top-12 left-10 w-[350px] h-[350px] bg-[#ef233c]/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-40 right-20 w-[400px] h-[400px] bg-[#ef233c]/5 rounded-full blur-[140px] pointer-events-none" />

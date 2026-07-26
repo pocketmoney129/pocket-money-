@@ -143,6 +143,14 @@ export default function WithdrawPage() {
     return styles[status as keyof typeof styles] || "bg-zinc-900 border-zinc-850 text-zinc-400";
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-32 font-sans">
+        <Loader2 className="animate-spin text-[#ef233c]" size={36} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 font-sans text-zinc-300 relative">
       <div>
@@ -150,12 +158,8 @@ export default function WithdrawPage() {
         <p className="text-xs text-zinc-450 font-semibold mt-1">Submit a withdrawal request. Funds will be sent directly to your saved bank account.</p>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="animate-spin text-[#ef233c]" size={32} />
-        </div>
-      ) : (
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-8">
+
           
           {/* Form Area */}
           <div className="lg:col-span-2 space-y-6">
@@ -269,7 +273,7 @@ export default function WithdrawPage() {
           </div>
 
         </div>
-      )}
+
 
       {/* History log */}
       <div className="bg-zinc-950 rounded-3xl p-6 sm:p-8 border border-zinc-900 shadow-xl">

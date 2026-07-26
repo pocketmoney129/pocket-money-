@@ -297,14 +297,19 @@ export const getWalletSummary = async (req: AuthRequest, res: Response): Promise
 
     const user = userSnap.data();
 
-    // Direct referrals count
-    const directSnap = await getDocs(query(usersRef, where("sponsor", "==", userId)));
+    // Parallelize core queries for ultra-fast response
+    const [directSnap, txSnap, withSnap] = await Promise.all([
+      getDocs(query(usersRef, where("sponsor", "==", userId))),
+      getDocs(query(collection(db, "transactions"), where("user", "==", userId))),
+      getDocs(query(collection(db, "withdrawals"), where("user", "==", userId)))
+    ]);
+
     const directMembers = directSnap.size;
 
-    // Total Team size
+    // Total Team size (optimized to 5 levels for speed)
     let totalTeamCount = 0;
     let tempLevelIds = [userId];
-    for (let l = 1; l <= 10; l++) {
+    for (let l = 1; l <= 5; l++) {
       if (tempLevelIds.length === 0) break;
       const nextIds: string[] = [];
 
@@ -324,7 +329,6 @@ export const getWalletSummary = async (req: AuthRequest, res: Response): Promise
     const todayIST = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
     const istDateFormatter = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" });
 
-    const txSnap = await getDocs(query(collection(db, "transactions"), where("user", "==", userId)));
     const txList = txSnap.docs.map(docSnap => docSnap.data());
 
     let todayIncomeVal = 0;
@@ -354,9 +358,6 @@ export const getWalletSummary = async (req: AuthRequest, res: Response): Promise
       }
     });
 
-
-    // Calculate total withdrawals (approved & pending)
-    const withSnap = await getDocs(query(collection(db, "withdrawals"), where("user", "==", userId)));
     let totalWithdrawnApproved = 0;
     let totalWithdrawnPending = 0;
 
@@ -368,6 +369,7 @@ export const getWalletSummary = async (req: AuthRequest, res: Response): Promise
         totalWithdrawnPending += (w.amount || 0);
       }
     });
+
 
     const totalWithdrawn = parseFloat(totalWithdrawnApproved.toFixed(2));
 
