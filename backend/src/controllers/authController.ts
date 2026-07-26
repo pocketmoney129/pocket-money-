@@ -14,7 +14,8 @@ import {
   runTransaction
 } from "firebase/firestore";
 import { generateToken } from "../utils/generateToken";
-import { sendOtpEmail, sendWelcomeEmail, sendForgetPasswordEmail, sendContactEmail } from "../utils/email";
+import { sendOtpEmail, sendWelcomeEmail, sendForgetPasswordEmail, sendContactEmail, sendAdminNewUserAlert } from "../utils/email";
+
 
 // Generate 6-digit OTP
 const generateOTP = () => {
@@ -229,10 +230,14 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     // Delete OTP record
     await deleteDoc(otpDocRef);
 
-    // Send Welcome Email (non-blocking)
+    // Send Welcome Email & Admin Alert (non-blocking)
     sendWelcomeEmail(user.email, user.name).catch((err) => {
       console.error("Async welcome email sending error:", err);
     });
+    sendAdminNewUserAlert(user.email, user.name, user.username, user.phone).catch((err) => {
+      console.error("Async admin new user alert email error:", err);
+    });
+
 
     res.json({
       success: true,

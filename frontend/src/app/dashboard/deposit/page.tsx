@@ -73,7 +73,8 @@ export default function DepositPage() {
   const [transactionReference, setTransactionReference] = useState("");
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
-  
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -81,6 +82,23 @@ export default function DepositPage() {
   // Copy states
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [copiedBank, setCopiedBank] = useState(false);
+
+  const termsParagraphs = [
+    `By accessing, browsing, registering, purchasing any membership plan, or utilizing any services or features provided under the brand name "Pocket Money" (hereinafter referred to as "the Company"), the user expressly acknowledges, understands, and agrees to be legally bound by the following Terms & Conditions. These Terms govern the entire relationship between the user and the Company and supersede any previous verbal or written communications regarding the platform. Participation in the platform is completely voluntary and undertaken solely at the user's own discretion without any force, coercion, or misrepresentation by the Company or its representatives.`,
+    `The Company operates under its own independent business model. Funds received through membership plans or platform participation may be utilized by the Company for legitimate business operations and investment activities intended to generate business revenue. The Company may allocate these funds across various business opportunities, partnerships, expansion initiatives, or other revenue-generating activities in accordance with its internal business strategy. Revenue generated from these activities may be utilized for platform development, operational expenses, business expansion, reward programs, incentive pools, commissions, bonuses, and eligible member payouts as determined by the Company's policies. Participation in the platform does not create any ownership rights over the Company's investments, assets, or business operations.`,
+    `The user understands and agrees that Pocket Money is not a banking institution, savings scheme, fixed deposit, mutual fund, chit fund, NBFC, insurance provider, or any financial institution unless specifically required by applicable law. Participation on the platform should not be interpreted as purchasing any regulated financial product.`,
+    `All users acknowledge and accept that any membership purchase, financial contribution, package activation, or monetary transaction made through the platform is entirely voluntary and carried out at the user's own discretion. The Company does not guarantee fixed, assured, or risk-free returns. Earnings, rewards, bonuses, commissions, incentives, or payouts are governed solely by the Company's business model, reward plan, eligibility requirements, internal policies, and overall business performance. Actual earnings may vary depending on multiple factors including user activity, referral performance, team growth, package eligibility, system rules, business performance, verification processes, and other operational considerations.`,
+    `The user understands that all payments made toward membership plans or package activations are generally final and shall be processed in accordance with the Company's Refund and Cancellation Policy, if applicable. Submission of payment details or transaction proof does not automatically guarantee account activation or entitlement to any reward until verification is successfully completed by the Company.`,
+    `All withdrawal requests are subject to verification, fraud detection, compliance review, account status verification, and the Company's internal processing policies. The Company reserves the right to approve, delay, hold, or reject withdrawal requests where necessary to ensure platform security, regulatory compliance, or investigation of suspicious activities.`,
+    `The user further acknowledges that participation in referral programs, team-building activities, leadership rewards, level-based incentives, bonuses, or any other reward mechanism is entirely performance-based. The Company's reward structure depends upon eligibility criteria, platform policies, and business performance. The Company shall not be responsible for the actions, inactivity, misconduct, or performance of any referral, team member, or third party connected with the platform.`,
+    `Users agree to provide accurate, complete, and truthful personal information at all times. Pocket Money reserves the right to request identity verification (KYC), banking verification, or additional documentation whenever necessary to maintain platform security and regulatory compliance.`,
+    `Any misuse of the platform including but not limited to fake registrations, multiple accounts, identity fraud, forged payment proofs, unauthorized promotions, misleading advertisements, spam activities, system manipulation, hacking attempts, automated registrations, money laundering activities, or violations of applicable laws may result in immediate suspension or permanent termination of the user's account without prior notice. Any pending rewards or platform benefits may also be withheld where policy violations are detected.`,
+    `The Company continuously works to improve its services and therefore reserves the absolute right to modify, suspend, discontinue, replace, or update any feature, membership plan, business model, reward structure, withdrawal policy, referral policy, or these Terms & Conditions at any time without prior notice. Continued use of the platform after such modifications shall constitute acceptance of the revised Terms.`,
+    `While Pocket Money strives to maintain uninterrupted platform availability, the Company shall not be liable for temporary service interruptions caused by maintenance, software updates, server downtime, cyber incidents, third-party service failures, internet connectivity issues, force majeure events, or circumstances beyond its reasonable control.`,
+    `To the maximum extent permitted by applicable law, the Company, its owners, directors, employees, developers, partners, affiliates, and representatives shall not be held liable for any direct, indirect, incidental, consequential, special, or financial losses arising from the use of the platform, including but not limited to loss of profits, data loss, business interruption, unauthorized account access caused by user negligence, or actions of third parties.`,
+    `By creating an account, purchasing a membership, making any payment, or using any feature of Pocket Money, the user confirms that they have carefully read, fully understood, and voluntarily accepted these Terms & Conditions in their entirety.`,
+    `If the user does not agree with any provision of these Terms & Conditions, they should immediately discontinue use of the platform and refrain from registering or participating in any activities offered by Pocket Money.`
+  ];
 
   const fetchData = async () => {
     try {
@@ -127,6 +145,7 @@ export default function DepositPage() {
     setTransactionReference("");
     setScreenshot(null);
     setScreenshotPreview(null);
+    setAcceptedTerms(false);
     router.replace(`/dashboard/deposit?packageId=${pkg._id}`);
   };
 
@@ -137,8 +156,10 @@ export default function DepositPage() {
     setTransactionReference("");
     setScreenshot(null);
     setScreenshotPreview(null);
+    setAcceptedTerms(false);
     router.replace(`/dashboard/deposit`);
   };
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -519,14 +540,43 @@ export default function DepositPage() {
                       </div>
                     </div>
 
+                    {/* MANDATORY TERMS & CONDITIONS ACCEPTANCE SECTION */}
+                    <div className="space-y-3 pt-3 border-t border-zinc-900">
+                      <label className="block text-[11px] font-extrabold uppercase tracking-wider text-zinc-400">
+                        Deposit Terms & Conditions (Mandatory)
+                      </label>
+                      
+                      {/* Scrollable Terms Text Box */}
+                      <div className="h-40 overflow-y-auto bg-zinc-900/60 border border-zinc-850 rounded-2xl p-3.5 text-[11px] text-zinc-400 font-light leading-relaxed space-y-2.5 shadow-inner">
+                        {termsParagraphs.map((para, idx) => (
+                          <p key={idx}>{para}</p>
+                        ))}
+                      </div>
+
+                      {/* Mandatory Checkbox */}
+                      <div className="flex items-start gap-2.5 pt-1">
+                        <input
+                          type="checkbox"
+                          id="acceptedTerms"
+                          checked={acceptedTerms}
+                          onChange={(e) => setAcceptedTerms(e.target.checked)}
+                          className="mt-0.5 w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-[#ef233c] focus:ring-[#ef233c] focus:ring-offset-zinc-950 cursor-pointer accent-[#ef233c]"
+                        />
+                        <label htmlFor="acceptedTerms" className="text-xs font-bold text-white cursor-pointer select-none leading-tight">
+                          I have read, understood and agree to the Terms & Conditions.
+                        </label>
+                      </div>
+                    </div>
+
                     <button
                       type="submit"
-                      disabled={submitting}
-                      className="w-full py-3.5 bg-[#ef233c] hover:bg-red-750 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                      disabled={submitting || !acceptedTerms}
+                      className="w-full py-3.5 bg-[#ef233c] hover:bg-red-750 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {submitting ? <Loader2 className="animate-spin animate-duration-1000" size={16} /> : "Submit Payment & Request Activation"}
                     </button>
                   </form>
+
                 </div>
               </div>
             </div>

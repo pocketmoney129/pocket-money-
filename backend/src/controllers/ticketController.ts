@@ -11,7 +11,7 @@ import {
   where, 
   updateDoc 
 } from "firebase/firestore";
-import { sendSupportReplyEmail } from "../utils/email";
+import { sendSupportReplyEmail, sendAdminSupportTicketAlert } from "../utils/email";
 
 // @desc    Create a new support ticket
 // @route   POST /api/tickets
@@ -44,7 +44,18 @@ export const createTicket = async (req: AuthRequest, res: Response): Promise<voi
 
     await setDoc(doc(db, "support_tickets", ticketId), ticketData);
 
+    // Send Admin Email Alert for new support ticket (non-blocking)
+    sendAdminSupportTicketAlert(
+      req.user?.email || "User Email",
+      req.user?.name || req.user?.username || "User Name",
+      subject,
+      message
+    ).catch((err) => {
+      console.error("Async admin support ticket alert email error:", err);
+    });
+
     res.status(201).json({ success: true, message: "Support ticket created successfully", data: ticketData });
+
   } catch (error: any) {
     console.error("Create ticket error:", error);
     res.status(500).json({ success: false, message: "Server Error" });

@@ -251,3 +251,71 @@ export const sendContactEmail = async (contactData: { name: string; email: strin
   `;
   return sendEmail("pocketmoneyhelp129@gmail.com", `Pocket Money Query - ${contactData.subject}`, defaultHtmlTemplate(title, body));
 };
+
+export const sendAdminNewUserAlert = async (
+  userEmail: string,
+  userName: string,
+  username: string,
+  phone: string
+) => {
+  const adminEmail = "pocketmoneyhelp129@gmail.com";
+  const body = `
+    <p style="margin: 0 0 16px 0; color: #a1a1aa;">A new user has just registered on the Pocket Money platform:</p>
+    
+    <table width="100%" border="0" cellspacing="0" cellpadding="10" bgcolor="#15151b" style="background-color: #15151b; border-radius: 12px; margin-bottom: 20px; border: 1px solid #27272a; color: #ffffff;">
+      <tr>
+        <td style="color: #a1a1aa; font-weight: bold; font-size: 13px;">Full Name:</td>
+        <td style="color: #ffffff; font-weight: 800; text-align: right;">${userName}</td>
+      </tr>
+      <tr>
+        <td style="color: #a1a1aa; font-weight: bold; font-size: 13px;">Username:</td>
+        <td style="color: #ef233c; font-weight: 800; font-family: monospace; text-align: right;">@${username}</td>
+      </tr>
+      <tr>
+        <td style="color: #a1a1aa; font-weight: bold; font-size: 13px;">Email:</td>
+        <td style="color: #ffffff; font-weight: 800; text-align: right;">${userEmail}</td>
+      </tr>
+      <tr>
+        <td style="color: #a1a1aa; font-weight: bold; font-size: 13px;">Phone:</td>
+        <td style="color: #ffffff; font-weight: 800; text-align: right;">${phone || "N/A"}</td>
+      </tr>
+    </table>
+    
+    <p style="margin: 0; color: #71717a; font-size: 12px;">You can view and manage user status from the Admin Panel Users Directory.</p>
+  `;
+
+  return sendEmail(adminEmail, `🚨 [Admin Alert] New User Registered: ${userName} (@${username})`, defaultHtmlTemplate("New User Registration Alert", body));
+};
+
+export const sendAdminSupportTicketAlert = async (
+  userEmail: string,
+  userName: string,
+  ticketSubject: string,
+  ticketMessage: string
+) => {
+  const adminEmail = "pocketmoneyhelp129@gmail.com";
+  const body = `
+    <p style="margin: 0 0 16px 0; color: #a1a1aa;">A new support help ticket has been submitted by a user:</p>
+    
+    <table width="100%" border="0" cellspacing="0" cellpadding="10" bgcolor="#15151b" style="background-color: #15151b; border-radius: 12px; margin-bottom: 20px; border: 1px solid #27272a; color: #ffffff;">
+      <tr>
+        <td style="color: #a1a1aa; font-weight: bold; font-size: 13px;">User:</td>
+        <td style="color: #ffffff; font-weight: 800; text-align: right;">${userName} (${userEmail})</td>
+      </tr>
+      <tr>
+        <td style="color: #a1a1aa; font-weight: bold; font-size: 13px;">Subject:</td>
+        <td style="color: #ef233c; font-weight: 800; text-align: right;">${ticketSubject}</td>
+      </tr>
+    </table>
+
+    <div style="background-color: #18181b; border: 1px solid #27272a; border-radius: 10px; padding: 16px; margin-bottom: 20px; color: #e4e4e7;">
+      <span style="font-size: 11px; font-weight: 800; color: #ef233c; text-transform: uppercase; display: block; margin-bottom: 8px;">Message Content:</span>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #ffffff;">${ticketMessage}</p>
+    </div>
+    
+    <p style="margin: 0; color: #71717a; font-size: 12px;">Reply to this ticket directly from the Admin Panel Support Desk.</p>
+  `;
+
+  return sendEmail(adminEmail, `📩 [Support Alert] New Help Ticket: ${ticketSubject} (from ${userName})`, defaultHtmlTemplate("New Support Ticket Received", body));
+};
+
