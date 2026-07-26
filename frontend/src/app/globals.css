@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --accent-red: #ef233c;
+  --accent-red-glow: rgba(239, 35, 60, 0.6);
+}
+
+@theme {
+  --color-primary: #ef233c; /* Red Noir Accent Red */
+  --color-primary-hover: #d90429;
+  --color-secondary: #ef233c; 
+  --color-secondary-hover: #d90429;
+  --color-navy-800: #140303;
+  --color-navy-900: #050101;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Red Selection Highlight */
+::selection {
+  background: var(--accent-red);
+  color: #ffffff;
+}
+
+/* Remove all section divider borders for seamless flow */
+section, footer {
+  position: relative;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Glassmorphism helpers for Red Noir Theme */
+.glass {
+  background: rgba(10, 2, 2, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(239, 35, 60, 0.2);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(239, 35, 60, 0.25);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+/* Gradient Text Helper */
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #ef233c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Shiny CTA Button Animation (Pseudo-element rotation for universal compatibility) */
+.shiny-cta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shiny-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(239, 35, 60, 0.45);
+  border-color: rgba(239, 35, 60, 0.4);
+}
+
+.shiny-cta::before {
+  content: '';
+  position: absolute;
+  top: -150%;
+  left: -150%;
+  width: 400%;
+  height: 400%;
+  background: conic-gradient(from 0deg, transparent 0%, #ef233c 25%, #ef233c 50%, transparent 75%, transparent 100%);
+  animation: border-spin 4s linear infinite;
+  z-index: -2;
+}
+
+.shiny-cta::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px;
+  background: #000000;
+  border-radius: 10.5px;
+  z-index: -1;
+}
+
+/* Parallax Stars scrolling animations */
+@keyframes animStar {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-2000px); }
+}
+
+@keyframes border-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Bright Floating and Pulsing Nebulae Orbs Animations */
+@keyframes float-1 {
+  0%, 100% { transform: translate(-15%, -15%) scale(1); }
+  50% { transform: translate(15%, 15%) scale(1.25); }
+}
+
+@keyframes float-2 {
+  0%, 100% { transform: translate(15%, -20%) scale(1.1); }
+  50% { transform: translate(-15%, 20%) scale(0.9); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.pulse-glow {
+  animation: pulse-slow 7s ease-in-out infinite;
+}
+
+.float-glow-1 {
+  animation: float-1 12s ease-in-out infinite;
+}
+
+.float-glow-2 {
+  animation: float-2 16s ease-in-out infinite;
+}
+
+.hover-spin-glow {
+  animation: border-spin 3s linear infinite;
+}
+
+/* Stars: Sized at 3px & 4.5px */
+.stars-1 {
+  position: absolute;
+  width: 3px !important;
+  height: 3px !important;
+  background: transparent;
+  box-shadow: 234px 124px #fff, 654px 345px #fff, 876px 12px #fff, 1200px 800px #fff, 400px 1500px #fff, 1800px 200px #fff, 100px 1000px #fff, 900px 1900px #fff, 500px 600px #fff, 1400px 100px #fff, 300px 400px #fff, 1600px 1200px #fff,
+              100px 250px #fff, 450px 700px #fff, 800px 1100px #fff, 1300px 1500px #fff, 1700px 1850px #fff;
+  animation: animStar 20s linear infinite;
+}
+
+.stars-1::after {
+  content: "";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 3px !important;
+  height: 3px !important;
+  background: transparent;
+  box-shadow: 234px 124px #fff, 654px 345px #fff, 876px 12px #fff, 1200px 800px #fff, 400px 1500px #fff, 1800px 200px #fff, 100px 1000px #fff, 900px 1900px #fff, 500px 600px #fff, 1400px 100px #fff, 300px 400px #fff, 1600px 1200px #fff,
+              100px 250px #fff, 450px 700px #fff, 800px 1100px #fff, 1300px 1500px #fff, 1700px 1850px #fff;
+}
+
+.stars-2 {
+  position: absolute;
+  width: 5px !important;
+  height: 5px !important;
+  background: transparent;
+  box-shadow: 123px 456px #fff, 789px 234px #fff, 456px 890px #fff, 1100px 300px #fff, 200px 1200px #fff, 1500px 500px #fff, 600px 1700px #fff, 1300px 900px #fff,
+              300px 100px #fff, 700px 600px #fff, 950px 1050px #fff, 1450px 1350px #fff;
+  animation: animStar 30s linear infinite;
+}
+
+.stars-2::after {
+  content: "";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 5px !important;
+  height: 5px !important;
+  background: transparent;
+  box-shadow: 123px 456px #fff, 789px 234px #fff, 456px 890px #fff, 1100px 300px #fff, 200px 1200px #fff, 1500px 500px #fff, 600px 1700px #fff, 1300px 900px #fff,
+              300px 100px #fff, 700px 600px #fff, 950px 1050px #fff, 1450px 1350px #fff;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
+  color: transparent;
+}
+
+/* 3D Perspective Grid Background for Dashboard */
+.dashboard-grid-floor {
+  position: fixed;
+  bottom: 0;
+  left: -50%;
+  width: 200%;
+  height: 65%;
+  background-image:
+    linear-gradient(rgba(239, 35, 60, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 35, 60, 0.18) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(500px) rotateX(60deg);
+  transform-origin: bottom center;
+  -webkit-mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.6) 40%, transparent 80%);
+  mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.6) 40%, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+
