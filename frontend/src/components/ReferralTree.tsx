@@ -133,15 +133,16 @@ export const ReferralTree: React.FC<ReferralTreeProps> = ({ node, isRoot = false
           )}
 
           {/* Children columns container */}
-          <div className="flex justify-around items-start w-full relative pt-2">
+          <div className="flex justify-around items-start w-full relative pt-2 gap-8 sm:gap-12 md:gap-16 px-4">
             {node.children.map((child) => (
-              <div key={child.id} className="flex flex-col items-center relative flex-1">
+              <div key={child.id} className="flex flex-col items-center relative flex-1 px-3 sm:px-6">
                 {/* Vertical stem line down to child node */}
                 <div className="w-0.5 h-4 bg-gradient-to-b from-red-500 to-zinc-800" />
                 <ReferralTree node={child} onSelectNode={onSelectNode} />
               </div>
             ))}
           </div>
+
         </div>
       )}
     </div>
