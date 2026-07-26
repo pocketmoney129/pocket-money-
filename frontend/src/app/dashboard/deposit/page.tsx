@@ -18,7 +18,10 @@ import {
   Calendar,
   Clock,
   ArrowUpRight,
-  ChevronLeft
+  ChevronLeft,
+  X,
+  CheckCircle2,
+  ShieldCheck
 } from "lucide-react";
 
 interface PaymentSettings {
@@ -74,10 +77,12 @@ export default function DepositPage() {
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
 
   // Copy states
   const [copiedUpi, setCopiedUpi] = useState(false);
@@ -541,20 +546,8 @@ export default function DepositPage() {
                     </div>
 
                     {/* MANDATORY TERMS & CONDITIONS ACCEPTANCE SECTION */}
-                    <div className="space-y-3 pt-3 border-t border-zinc-900">
-                      <label className="block text-[11px] font-extrabold uppercase tracking-wider text-zinc-400">
-                        Deposit Terms & Conditions (Mandatory)
-                      </label>
-                      
-                      {/* Scrollable Terms Text Box */}
-                      <div className="h-40 overflow-y-auto bg-zinc-900/60 border border-zinc-850 rounded-2xl p-3.5 text-[11px] text-zinc-400 font-light leading-relaxed space-y-2.5 shadow-inner">
-                        {termsParagraphs.map((para, idx) => (
-                          <p key={idx}>{para}</p>
-                        ))}
-                      </div>
-
-                      {/* Mandatory Checkbox */}
-                      <div className="flex items-start gap-2.5 pt-1">
+                    <div className="pt-2 border-t border-zinc-900">
+                      <div className="flex items-start gap-2.5">
                         <input
                           type="checkbox"
                           id="acceptedTerms"
@@ -563,7 +556,14 @@ export default function DepositPage() {
                           className="mt-0.5 w-4 h-4 rounded border-zinc-800 bg-zinc-900 text-[#ef233c] focus:ring-[#ef233c] focus:ring-offset-zinc-950 cursor-pointer accent-[#ef233c]"
                         />
                         <label htmlFor="acceptedTerms" className="text-xs font-bold text-white cursor-pointer select-none leading-tight">
-                          I have read, understood and agree to the Terms & Conditions.
+                          I have read, understood and agree to the{" "}
+                          <button
+                            type="button"
+                            onClick={() => setShowTermsModal(true)}
+                            className="text-[#ef233c] hover:underline font-black cursor-pointer inline-flex items-center gap-0.5"
+                          >
+                            Terms & Conditions
+                          </button>.
                         </label>
                       </div>
                     </div>
@@ -576,12 +576,59 @@ export default function DepositPage() {
                       {submitting ? <Loader2 className="animate-spin animate-duration-1000" size={16} /> : "Submit Payment & Request Activation"}
                     </button>
                   </form>
-
                 </div>
               </div>
             </div>
           )}
         </>
+      )}
+
+      {/* TERMS & CONDITIONS POPUP MODAL */}
+      {showTermsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-2xl w-full space-y-5 shadow-[0_0_50px_rgba(239,35,60,0.15)] relative overflow-hidden max-h-[85vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-zinc-900 pb-4 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#ef233c]/10 border border-[#ef233c]/20 flex items-center justify-center">
+                  <ShieldCheck size={18} className="text-[#ef233c]" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base text-white font-manrope">Pocket Money Terms & Conditions</h3>
+                  <p className="text-[10px] text-zinc-400 font-semibold">Mandatory Platform Usage & Membership Agreement</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Scrollable Terms Content */}
+            <div className="overflow-y-auto space-y-3.5 pr-2 text-xs text-zinc-300 font-light leading-relaxed custom-scrollbar flex-1">
+              {termsParagraphs.map((para, idx) => (
+                <p key={idx} className="bg-zinc-900/50 p-4 rounded-2xl border border-zinc-850/60 leading-relaxed text-zinc-300">
+                  {para}
+                </p>
+              ))}
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div className="pt-3 border-t border-zinc-900 flex justify-end gap-3 shrink-0">
+              <button
+                onClick={() => {
+                  setAcceptedTerms(true);
+                  setShowTermsModal(false);
+                }}
+                className="w-full py-3 bg-[#ef233c] hover:bg-red-750 text-white font-bold text-xs rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <CheckCircle2 size={16} /> I Accept Terms & Conditions
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* History table */}
