@@ -327,7 +327,8 @@ export const getGenealogyTree = async (req: AuthRequest, res: Response): Promise
       return node;
     };
 
-    const tree = await fetchNodes(userId, 1, 3);
+    const tree = await fetchNodes(userId, 1, 5);
+
 
 
     res.json({ success: true, data: tree });
