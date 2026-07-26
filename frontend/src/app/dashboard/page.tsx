@@ -235,7 +235,7 @@ export default function DashboardOverview() {
       <div className="absolute bottom-40 right-20 w-[400px] h-[400px] bg-[#ef233c]/5 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Header Greeting Banner */}
-      <div className="bg-zinc-950/80 backdrop-blur-md rounded-3xl p-6 border border-zinc-900 text-white relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
+      <div className="bg-zinc-950/80 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-zinc-900 text-white relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
         <div className="space-y-1.5 relative z-10">
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#ef233c] bg-[#ef233c]/10 px-3 py-1 rounded-full border border-[#ef233c]/20">
             System Ledger Dashboard
@@ -243,30 +243,8 @@ export default function DashboardOverview() {
           <h2 className="text-xl sm:text-2xl font-black text-white font-manrope pt-1.5">Welcome back, {user?.name}!</h2>
           <p className="text-xs text-zinc-450 font-medium">Build your genealogy network, activate packages, and track earnings instantly.</p>
         </div>
-
-        {/* User Badge Details */}
-        <div className="flex flex-wrap items-center gap-3 relative z-10 w-full md:w-auto">
-          <div className="bg-zinc-900 border border-zinc-850 p-3 rounded-2xl flex items-center gap-3 w-full sm:w-auto">
-            <div className="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-zinc-400">
-              <Shield size={18} />
-            </div>
-            <div>
-              <p className="text-[9px] text-zinc-550 font-bold uppercase">Profile Security</p>
-              <p className="text-xs text-white font-bold">{user?.kyc?.status === "approved" ? "KYC Approved" : "KYC Pending"}</p>
-            </div>
-          </div>
-
-          <div className="bg-zinc-900 border border-zinc-850 p-3 rounded-2xl flex items-center gap-3 w-full sm:w-auto">
-            <div className="w-10 h-10 rounded-xl bg-[#ef233c]/10 border border-[#ef233c]/20 text-[#ef233c] flex items-center justify-center">
-              <Award size={18} />
-            </div>
-            <div>
-              <p className="text-[9px] text-zinc-550 font-bold uppercase">Achieved Rank</p>
-              <p className={`text-xs font-black ${currentRank.color}`}>{currentRank.name}</p>
-            </div>
-          </div>
-        </div>
       </div>
+
 
 
 
