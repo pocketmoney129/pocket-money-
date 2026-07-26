@@ -38,15 +38,12 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center flex-col gap-4 font-sans">
-        {/* Red orbs */}
-        <div className="fixed top-1/4 left-1/4 w-[500px] h-[500px] bg-[#ef233c]/15 rounded-full blur-[140px] float-glow-1 pointer-events-none" />
-        <div className="fixed bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#ef233c]/10 rounded-full blur-[120px] float-glow-2 pointer-events-none" />
-        <Loader2 className="animate-spin text-[#ef233c] relative z-10" size={32} />
-        <p className="text-xs font-bold text-zinc-500 relative z-10 uppercase tracking-widest">Restoring admin session...</p>
+      <div className="min-h-screen bg-black flex items-center justify-center font-sans">
+        <Loader2 className="animate-spin text-[#ef233c] relative z-10" size={36} />
       </div>
     );
   }
+
 
   if (!admin) return null;
 

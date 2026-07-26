@@ -12,12 +12,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-zinc-400 flex items-center justify-center flex-col gap-4 font-sans">
-        <Loader2 className="animate-spin text-[#ef233c]" size={32} />
-        <p className="text-sm font-semibold text-zinc-550">Loading your profile session...</p>
+      <div className="min-h-screen bg-black flex items-center justify-center font-sans">
+        <Loader2 className="animate-spin text-[#ef233c]" size={36} />
       </div>
     );
   }
+
 
   if (!user) {
     return null; // Let the AuthContext redirect kick in

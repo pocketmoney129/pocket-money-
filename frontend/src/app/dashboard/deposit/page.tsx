@@ -280,6 +280,14 @@ export default function DepositPage() {
 
   const backendUrl = "http://localhost:5001";
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-32 font-sans">
+        <Loader2 className="animate-spin text-[#ef233c]" size={36} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 font-sans text-zinc-300 relative">
       <div>
@@ -290,12 +298,8 @@ export default function DepositPage() {
       {error && <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold shadow-md">{error}</div>}
       {success && <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold shadow-md">{success}</div>}
 
-      {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="animate-spin text-[#ef233c]" size={32} />
-        </div>
-      ) : (
-        <>
+      <>
+
           {/* STEP 1: Packages Selection (Shown if selectedPackage is null) */}
           {!selectedPackage ? (
             <div className="space-y-8">
@@ -581,7 +585,7 @@ export default function DepositPage() {
             </div>
           )}
         </>
-      )}
+
 
       {/* TERMS & CONDITIONS POPUP MODAL */}
       {showTermsModal && (

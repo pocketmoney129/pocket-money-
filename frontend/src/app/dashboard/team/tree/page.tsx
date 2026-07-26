@@ -52,12 +52,11 @@ export default function GenealogyPage() {
       {/* 3D TREE CONTAINER CANVAS */}
       <div className="overflow-auto min-h-[500px] flex items-center justify-center relative py-4">
         {loading ? (
-
-          <div className="flex flex-col items-center gap-3 relative z-10">
+          <div className="flex items-center justify-center relative z-10 py-16">
             <Loader2 className="animate-spin text-[#ef233c]" size={36} />
-            <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Rendering 3D Nodes Map...</p>
           </div>
         ) : !treeData ? (
+
           <p className="text-sm text-zinc-500 font-semibold relative z-10">Failed to load genealogy structure.</p>
         ) : (
           <div className="py-12 px-8 min-w-max relative z-10">
