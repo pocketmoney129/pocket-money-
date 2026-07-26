@@ -50,11 +50,9 @@ export default function GenealogyPage() {
       </div>
 
       {/* 3D TREE CONTAINER CANVAS */}
-      <div className="bg-zinc-950/90 backdrop-blur-md rounded-3xl p-8 border border-zinc-900 shadow-2xl overflow-auto min-h-[600px] flex items-center justify-center relative">
-        {/* Ambient background grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-
+      <div className="overflow-auto min-h-[500px] flex items-center justify-center relative py-4">
         {loading ? (
+
           <div className="flex flex-col items-center gap-3 relative z-10">
             <Loader2 className="animate-spin text-[#ef233c]" size={36} />
             <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Rendering 3D Nodes Map...</p>
