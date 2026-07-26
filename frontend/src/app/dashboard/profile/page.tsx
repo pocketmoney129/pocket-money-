@@ -138,15 +138,8 @@ export default function ProfilePage() {
     
     switch (status) {
       case "approved":
-        return (
-          <div className="p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-start gap-4">
-            <CheckCircle className="text-emerald-450 shrink-0 mt-0.5" size={20} />
-            <div>
-              <p className="text-sm font-bold font-manrope">KYC Verification Approved</p>
-              <p className="text-xs text-zinc-400 mt-1 leading-relaxed">Your identity has been fully verified. Withdrawals and package activation nodes are completely unlocked.</p>
-            </div>
-          </div>
-        );
+        return null;
+
       case "pending":
         return (
           <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-start gap-4">
@@ -308,103 +301,106 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* KYC Upload console */}
-        <div className="bg-zinc-950 rounded-3xl p-6 sm:p-8 border border-zinc-900 shadow-xl h-fit">
-          <h3 className="font-extrabold text-lg text-white flex items-center gap-2 border-b border-zinc-900 pb-4 mb-6 font-manrope">
-            <ShieldCheck className="text-purple-450" /> KYC Identity verification
-          </h3>
+        {/* KYC Upload console (hidden when KYC is approved) */}
+        {user?.kyc?.status !== "approved" && (
+          <div className="bg-zinc-950 rounded-3xl p-6 sm:p-8 border border-zinc-900 shadow-xl h-fit">
+            <h3 className="font-extrabold text-lg text-white flex items-center gap-2 border-b border-zinc-900 pb-4 mb-6 font-manrope">
+              <ShieldCheck className="text-purple-400" /> KYC Identity Verification
+            </h3>
 
-          {user?.kyc?.status === "approved" || user?.kyc?.status === "pending" ? (
-            <div className="text-center py-12 space-y-3 bg-zinc-900/40 rounded-2xl border border-zinc-900">
-              <ShieldCheck className="text-emerald-450 mx-auto animate-pulse" size={48} />
-              <p className="text-sm font-black text-white font-manrope">Verification materials secure.</p>
-              <p className="text-xs text-zinc-550 max-w-xs mx-auto leading-relaxed">To protect privacy, uploaded documents are locked from user view. Status: <strong className="uppercase text-[#ef233c]">{user?.kyc.status}</strong></p>
-            </div>
-          ) : (
-            <form onSubmit={handleKycSubmit} className="space-y-6">
-              {kycError && <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-455 text-xs font-semibold">{kycError}</div>}
-              {kycSuccess && <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-450 text-xs font-semibold">{kycSuccess}</div>}
+            {user?.kyc?.status === "pending" ? (
+              <div className="text-center py-12 space-y-3 bg-zinc-900/40 rounded-2xl border border-zinc-900">
+                <ShieldCheck className="text-amber-400 mx-auto animate-pulse" size={48} />
+                <p className="text-sm font-black text-white font-manrope">Verification materials secure.</p>
+                <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">To protect privacy, uploaded documents are locked from user view. Status: <strong className="uppercase text-amber-400 font-bold">PENDING APPROVAL</strong></p>
+              </div>
+            ) : (
+              <form onSubmit={handleKycSubmit} className="space-y-6">
+                {kycError && <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">{kycError}</div>}
+                {kycSuccess && <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">{kycSuccess}</div>}
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">Select ID Document Type</label>
-                <select
-                  value={documentType}
-                  onChange={(e) => setDocumentType(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900 text-white focus:outline-none text-sm transition-colors"
+                <div>
+                  <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Select ID Document Type</label>
+                  <select
+                    value={documentType}
+                    onChange={(e) => setDocumentType(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white focus:outline-none text-sm transition-colors"
+                  >
+                    <option value="National ID">National ID Card</option>
+                    <option value="Passport">Passport</option>
+                    <option value="PAN Card">PAN Card</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Document ID Number</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter unique ID number"
+                    value={documentNumber}
+                    onChange={(e) => setDocumentNumber(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm font-semibold transition-all"
+                  />
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {/* Front Upload */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Front Side Image</label>
+                    <div className="border border-zinc-800/80 rounded-2xl p-4 bg-zinc-900/40 hover:bg-zinc-900 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative h-36">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        required
+                        onChange={handleFrontChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      {docFrontPreview ? (
+                        <img src={docFrontPreview} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
+                      ) : (
+                        <>
+                          <Upload className="text-zinc-500 mb-1" size={20} />
+                          <p className="text-[11px] font-bold text-zinc-350">Upload Front</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Back Upload */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-zinc-400 mb-2">Back Side Image (Optional)</label>
+                    <div className="border border-zinc-800/80 rounded-2xl p-4 bg-zinc-900/40 hover:bg-zinc-900 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative h-36">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleBackChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      {docBackPreview ? (
+                        <img src={docBackPreview} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
+                      ) : (
+                        <>
+                          <Upload className="text-zinc-500 mb-1" size={20} />
+                          <p className="text-[11px] font-bold text-zinc-350">Upload Back</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submittingKyc}
+                  className="w-full py-3.5 bg-[#ef233c] hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  <option value="National ID">National ID Card</option>
-                  <option value="Passport">Passport</option>
-                  <option value="PAN Card">PAN Card</option>
-                </select>
-              </div>
+                  {submittingKyc ? <Loader2 className="animate-spin" size={16} /> : "Submit KYC Request"}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
 
-              <div>
-                <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">Document ID Number</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Enter unique ID number"
-                  value={documentNumber}
-                  onChange={(e) => setDocumentNumber(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-zinc-855 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm font-semibold transition-all"
-                />
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                {/* Front Upload */}
-                <div>
-                  <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">Front Side Image</label>
-                  <div className="border-2 border-dashed border-zinc-855 rounded-2xl p-4 hover:bg-zinc-900 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative h-36">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      required
-                      onChange={handleFrontChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    {docFrontPreview ? (
-                      <img src={docFrontPreview} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
-                    ) : (
-                      <>
-                        <Upload className="text-zinc-550 mb-1" size={20} />
-                        <p className="text-[11px] font-bold text-zinc-350">Upload Front</p>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Back Upload */}
-                <div>
-                  <label className="block text-xs font-bold uppercase text-zinc-455 mb-2">Back Side Image (Optional)</label>
-                  <div className="border-2 border-dashed border-zinc-855 rounded-2xl p-4 hover:bg-zinc-900 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative h-36">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleBackChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    {docBackPreview ? (
-                      <img src={docBackPreview} alt="Preview" className="max-h-full max-w-full object-contain rounded-lg" />
-                    ) : (
-                      <>
-                        <Upload className="text-zinc-555 mb-1" size={20} />
-                        <p className="text-[11px] font-bold text-zinc-350">Upload Back</p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={submittingKyc}
-                className="w-full py-3.5 bg-[#ef233c] hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {submittingKyc ? <Loader2 className="animate-spin" size={16} /> : "Submit KYC Request"}
-              </button>
-            </form>
-          )}
-        </div>
 
       </div>
     </div>
