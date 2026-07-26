@@ -46,13 +46,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       {/* Header */}
       <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-900">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-[#ef233c]/15 border border-[#ef233c]/20 flex items-center justify-center text-white font-black text-sm shadow-[0_0_12px_rgba(239,35,60,0.15)]">
-            P
-          </div>
+          <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(239,35,60,0.3)]" />
           <span className="font-extrabold text-base text-white tracking-tight font-manrope">
             Pocket<span className="text-[#ef233c]">Money</span>
           </span>
         </Link>
+
         {onClose && (
           <button onClick={onClose} className="md:hidden text-zinc-400 hover:text-white p-1">
             <X size={20} />

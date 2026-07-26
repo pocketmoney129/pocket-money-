@@ -274,13 +274,12 @@ export default function Home() {
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 bg-[#ef233c] rounded-lg rotate-45 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-red-600/20 group-hover:rotate-90 transition-transform duration-300">
-                <span className="-rotate-45 group-hover:rotate-[-90deg] transition-transform duration-300">P</span>
-              </div>
+              <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(239,35,60,0.35)]" />
               <span className="font-bold text-xl tracking-tight text-white font-manrope">
                 Pocket<span className="text-[#ef233c]">Money</span>
               </span>
             </Link>
+
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8 text-sm font-semibold text-zinc-400">
@@ -1226,11 +1225,10 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-[#ef233c] rounded-lg rotate-45 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-red-600/10">
-                  <span className="-rotate-45">P</span>
-                </div>
+                <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-8 h-8 object-contain drop-shadow-[0_0_10px_rgba(239,35,60,0.3)]" />
                 <span className="font-bold text-xl tracking-tight text-white font-manrope">Pocket<span className="text-[#ef233c]">Money</span></span>
               </div>
+
               <p className="text-xs text-zinc-500 leading-relaxed max-w-xs font-light">
                 A premium, secure affiliate network platform with dynamic multi-level commissions mapping.
               </p>

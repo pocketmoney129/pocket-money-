@@ -41,13 +41,12 @@ export default function Login() {
           <ArrowLeft size={14} /> Back to Home
         </Link>
         <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#ef233c]/15 border border-[#ef233c]/20 flex items-center justify-center text-white font-black text-lg shadow-[0_0_15px_rgba(239,35,60,0.15)]">
-            P
-          </div>
+          <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(239,35,60,0.3)]" />
           <span className="font-extrabold text-xl text-white font-manrope">
             Pocket<span className="text-[#ef233c]">Money</span>
           </span>
         </div>
+
         <h2 className="text-center text-3xl font-extrabold text-white tracking-tight font-manrope">
           Sign In to Your Node
         </h2>

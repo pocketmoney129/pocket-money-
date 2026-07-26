@@ -52,14 +52,13 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
       {/* Brand */}
       <div className="h-20 flex items-center justify-between px-6 border-b border-zinc-900">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#ef233c] to-[#d90429] flex items-center justify-center text-white font-black text-sm shadow-lg shadow-[#ef233c]/30">
-            P
-          </div>
+          <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-8 h-8 object-contain drop-shadow-[0_0_10px_rgba(239,35,60,0.3)]" />
           <div>
             <span className="font-black text-sm text-white tracking-tight">Pocket<span className="text-[#ef233c]">Money</span></span>
             <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">Admin Console</p>
           </div>
         </Link>
+
         <button onClick={() => setSidebarOpen(false)} className="md:hidden text-zinc-500 hover:text-white transition-colors">
           <X size={18} />
         </button>

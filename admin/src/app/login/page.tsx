@@ -38,10 +38,9 @@ export default function AdminLogin() {
         {/* Brand */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#ef233c] to-[#d90429] flex items-center justify-center text-white font-black text-xl shadow-2xl shadow-[#ef233c]/40">
-              P
-            </div>
+            <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-12 h-12 object-contain drop-shadow-[0_0_15px_rgba(239,35,60,0.35)]" />
           </div>
+
           <div>
             <h1 className="text-2xl font-black text-white">
               Pocket<span className="text-[#ef233c]">Money</span>
