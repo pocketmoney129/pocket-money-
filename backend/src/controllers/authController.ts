@@ -69,9 +69,9 @@ export const lookupSponsor = async (req: Request, res: Response): Promise<void> 
 // @access  Public
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, username, password, phone, referralCode } = req.body;
+    const { name, email, password, phone, referralCode } = req.body;
 
-    if (!name || !email || !username || !password || !phone) {
+    if (!name || !email || !password || !phone) {
       res.status(400).json({ success: false, message: "Please enter all required fields" });
       return;
     }
@@ -97,17 +97,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       existingUserDocId = emailSnap.docs[0].id;
     }
 
-    // Check duplicate username
-    const qUsername = query(usersRef, where("username", "==", username.toLowerCase()));
-    const usernameSnap = await getDocs(qUsername);
-    if (!usernameSnap.empty) {
-      const existingUserByUsername = usernameSnap.docs[0].data();
-      if (existingUserByUsername.emailVerified === true || existingUserByUsername.email !== email.toLowerCase()) {
-        res.status(400).json({ success: false, message: "Username is already taken" });
-        return;
-      }
-    }
-
     // Validate sponsor referral code (try uppercase PM format first, then lowercase for legacy like "admin")
     let sponsorId = null;
     const codeUpper = referralCode.trim().toUpperCase();
@@ -122,8 +111,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
     sponsorId = sponsorSnap.docs[0].id;
 
-    // Generate unique PM-format referral code for this new user
-    const newUserReferralCode = await generatePMReferralCode();
+    // Auto-generate unique official User ID / Referral Code (e.g. PM5002)
+    const newUserIdCode = await generatePMReferralCode();
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
@@ -135,13 +124,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       _id: userId,
       name,
       email: email.toLowerCase(),
-      username: username.toLowerCase(),
+      username: newUserIdCode, // User ID and Referral Code are the exact same
+      referralCode: newUserIdCode, // User ID and Referral Code are the exact same
       password: hashedPassword,
       phone,
       role: "user",
       status: "inactive",
       sponsor: sponsorId,
-      referralCode: newUserReferralCode,
       walletBalance: 0,
       totalIncome: 0,
       emailVerified: false,
@@ -153,6 +142,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+
 
     await setDoc(doc(db, "users", userId), userData);
 
@@ -278,13 +268,20 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     let userSnap = await getDocs(query(usersRef, where("email", "==", usernameOrEmail.toLowerCase())));
 
     if (userSnap.empty) {
+      userSnap = await getDocs(query(usersRef, where("username", "==", usernameOrEmail.toUpperCase())));
+    }
+    if (userSnap.empty) {
       userSnap = await getDocs(query(usersRef, where("username", "==", usernameOrEmail.toLowerCase())));
+    }
+    if (userSnap.empty) {
+      userSnap = await getDocs(query(usersRef, where("referralCode", "==", usernameOrEmail.toUpperCase())));
     }
 
     if (userSnap.empty) {
-      res.status(400).json({ success: false, message: "Invalid credentials" });
+      res.status(400).json({ success: false, message: "Invalid credentials. Please check your User ID / Email and password." });
       return;
     }
+
 
     const userDoc = userSnap.docs[0];
     const user = userDoc.data();

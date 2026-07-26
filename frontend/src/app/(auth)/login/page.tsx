@@ -70,7 +70,7 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-xs font-bold uppercase text-zinc-400 mb-2">
-                Username or Email Address
+                User ID / Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
@@ -83,10 +83,11 @@ export default function Login() {
                   required
                   value={usernameOrEmail}
                   onChange={(e) => setUsernameOrEmail(e.target.value)}
-                  placeholder="admin or email@domain.com"
+                  placeholder="PM5001 or name@example.com"
                   className="block w-full pl-10 pr-4 py-3 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
                 />
               </div>
+
             </div>
 
             <div>

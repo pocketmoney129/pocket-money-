@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "../../../context/AuthContext";
-import { User, Mail, Lock, Phone, Link2, Loader2, ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { User, Mail, Lock, Phone, Link2, Loader2, ArrowLeft, CheckCircle, XCircle, ShieldCheck } from "lucide-react";
 
 function RegisterForm() {
   const { register, verifyRegistrationOtp } = useAuth();
@@ -15,10 +15,10 @@ function RegisterForm() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [referralCode, setReferralCode] = useState("");
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -57,7 +57,7 @@ function RegisterForm() {
           setSponsorError(null);
         } else {
           setSponsorName(null);
-          setSponsorError("Invalid referral code");
+          setSponsorError("Invalid sponsor referral code");
         }
       } catch {
         setSponsorName(null);
@@ -74,8 +74,8 @@ function RegisterForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !username || !phone || !password) {
-      setError("Please fill in all fields");
+    if (!name || !email || !phone || !password) {
+      setError("Please fill in all required fields");
       return;
     }
     if (!referralCode || !referralCode.trim()) {
@@ -94,18 +94,17 @@ function RegisterForm() {
       const res = await register({
         name,
         email,
-        username,
         phone,
         password,
         referralCode: referralCode.trim()
       });
       
       if (res.success) {
-        setSuccessMessage("Account created! Verification OTP code has been sent to your email.");
+        setSuccessMessage("Account setup successful! A 6-digit OTP verification code has been sent to your email.");
         setStep("otp");
       }
     } catch (err: any) {
-      setError(err.message || "Registration failed. Verify referral code.");
+      setError(err.message || "Registration failed. Please check details.");
     } finally {
       setLoading(false);
     }
@@ -133,26 +132,26 @@ function RegisterForm() {
     return (
       <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl sm:px-10">
         {successMessage && (
-          <div className="mb-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-450 text-xs font-semibold">
+          <div className="mb-4 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold leading-relaxed">
             {successMessage}
           </div>
         )}
         {error && (
-          <div className="mb-4 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-450 text-xs font-semibold">
+          <div className="mb-4 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">
             {error}
           </div>
         )}
 
         <form onSubmit={handleVerifyOtp} className="space-y-6">
-          <div className="text-center">
-            <p className="text-xs text-zinc-550 font-bold uppercase tracking-wider mb-2">Email Verification</p>
+          <div className="text-center space-y-1">
+            <p className="text-xs text-[#ef233c] font-black uppercase tracking-wider">Email Verification</p>
             <p className="text-xs text-zinc-400 font-semibold leading-relaxed">
-              We sent a 6-digit OTP code to <strong className="text-white">{email}</strong>. Enter it below to activate your account.
+              We sent a 6-digit OTP code to <strong className="text-white">{email}</strong>. Enter it below to activate your account and view your official User ID.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-zinc-400 mb-1 text-center">
+            <label className="block text-xs font-bold uppercase text-zinc-400 mb-2 text-center">
               6-Digit Verification Code
             </label>
             <input
@@ -161,8 +160,8 @@ function RegisterForm() {
               maxLength={6}
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-              placeholder="e.g. 123456"
-              className="block w-full px-4 py-3 border border-zinc-850 rounded-xl bg-zinc-900/50 text-center text-lg font-black tracking-[10px] text-[#ef233c] focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.15)] focus:outline-none transition-all"
+              placeholder="123456"
+              className="block w-full px-4 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/60 text-center text-xl font-black tracking-[10px] text-[#ef233c] focus:border-[#ef233c] focus:shadow-[0_0_15px_rgba(239,35,60,0.15)] focus:outline-none transition-all font-mono"
             />
           </div>
 
@@ -170,9 +169,9 @@ function RegisterForm() {
             <button
               type="submit"
               disabled={loading || otp.length < 6}
-              className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-[#ef233c] hover:bg-red-700 focus:outline-none disabled:opacity-50 transition-colors"
+              className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-2xl shadow-md text-sm font-bold text-white bg-[#ef233c] hover:bg-red-700 focus:outline-none disabled:opacity-50 transition-colors"
             >
-              {loading ? <Loader2 className="animate-spin" size={18} /> : "Verify & Log In"}
+              {loading ? <Loader2 className="animate-spin" size={18} /> : "Verify & Activate Account"}
             </button>
           </div>
 
@@ -182,7 +181,7 @@ function RegisterForm() {
               onClick={() => setStep("signup")}
               className="text-xs font-bold text-zinc-500 hover:text-white transition-colors"
             >
-              ← Back to Registration Details
+              ← Back to Registration Form
             </button>
           </div>
         </form>
@@ -193,7 +192,7 @@ function RegisterForm() {
   return (
     <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl sm:px-10">
       {error && (
-        <div className="mb-4 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-450 text-xs font-semibold">
+        <div className="mb-4 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">
           {error}
         </div>
       )}
@@ -204,7 +203,7 @@ function RegisterForm() {
             Full Name
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-550">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
               <User size={16} />
             </div>
             <input
@@ -212,7 +211,7 @@ function RegisterForm() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="John Doe"
+              placeholder="Enter your full name"
               className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
@@ -223,7 +222,7 @@ function RegisterForm() {
             Email Address
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-550">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
               <Mail size={16} />
             </div>
             <input
@@ -231,59 +230,38 @@ function RegisterForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="john@example.com"
+              placeholder="name@example.com"
               className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-bold uppercase text-zinc-400 mb-1">
-              Username
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-550">
-                <User size={16} />
-              </div>
-              <input
-                type="text"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="johndoe"
-                className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
-              />
+        <div>
+          <label className="block text-xs font-bold uppercase text-zinc-400 mb-1">
+            Phone Number
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
+              <Phone size={16} />
             </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase text-zinc-400 mb-1">
-              Phone Number
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-550">
-                <Phone size={16} />
-              </div>
-              <input
-                type="text"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 9876543210"
-                className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
-              />
-            </div>
+            <input
+              type="text"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+91 9876543210"
+              className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all font-mono"
+            />
           </div>
         </div>
 
-        {/* Referral Code — REQUIRED with live sponsor name lookup */}
+        {/* Sponsor Referral Code — REQUIRED with live sponsor name lookup */}
         <div>
           <label className="block text-xs font-bold uppercase text-zinc-400 mb-1">
             Sponsor Referral Code <span className="text-[#ef233c] font-black">*</span>
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-550">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
               <Link2 size={16} />
             </div>
             <input
@@ -292,7 +270,7 @@ function RegisterForm() {
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
               placeholder="e.g. PM5001 or admin"
-              className={`block w-full pl-10 pr-10 py-2.5 border rounded-xl bg-zinc-900/50 font-semibold placeholder-zinc-600 focus:outline-none text-sm transition-all ${
+              className={`block w-full pl-10 pr-10 py-2.5 border rounded-xl bg-zinc-900/50 font-semibold placeholder-zinc-600 focus:outline-none text-sm transition-all font-mono ${
                 sponsorName
                   ? "border-emerald-500 text-emerald-400 focus:border-emerald-400 focus:shadow-[0_0_12px_rgba(16,185,129,0.12)]"
                   : sponsorError
@@ -321,7 +299,7 @@ function RegisterForm() {
           )}
           {!sponsorName && !sponsorError && (
             <p className="text-[10px] text-zinc-500 mt-1 font-medium">
-              A valid sponsor referral code is required. Enter the code shared by your referrer (e.g. <span className="text-zinc-400 font-semibold">PM5001</span>).
+              Enter your sponsor's Referral Code / User ID (e.g. <span className="text-zinc-400 font-semibold">PM5001</span>).
             </p>
           )}
         </div>
@@ -331,7 +309,7 @@ function RegisterForm() {
             Password
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-550">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
               <Lock size={16} />
             </div>
             <input
@@ -343,6 +321,12 @@ function RegisterForm() {
               className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
+        </div>
+
+        {/* Info notice about auto-assigned User ID */}
+        <div className="p-3 bg-zinc-900/60 border border-zinc-850 rounded-xl flex items-center gap-2.5 text-[11px] text-zinc-400">
+          <ShieldCheck size={16} className="text-[#ef233c] shrink-0" />
+          <span>Your official <strong>User ID & Referral Code</strong> (e.g. PM5002) will be auto-generated upon registration.</span>
         </div>
 
         <div className="pt-2">
