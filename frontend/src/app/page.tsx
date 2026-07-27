@@ -168,11 +168,33 @@ const fallbackPackages = [
 
 const mapPackageData = (pkg: any) => {
   const price = Number(pkg.price) || 0;
-  const daily = Number(pkg.dailyRoi) || Number(pkg.daily) || 0;
   const expiryDays = Number(pkg.expiryDays) || 25;
-  const total = Number(pkg.totalReturn) || Number(pkg.total) || (daily > 0 ? daily * expiryDays : Math.round(price * 1.8));
+
+  let daily = Number(pkg.dailyRoi) || Number(pkg.daily) || 0;
+  let total = Number(pkg.totalReturn) || Number(pkg.total) || 0;
+
+  if (daily === 0 && total > 0) {
+    daily = parseFloat((total / expiryDays).toFixed(2));
+  } else if (total === 0 && daily > 0) {
+    total = Math.round(daily * expiryDays);
+  } else if (daily === 0 && total === 0) {
+    const nameLower = (pkg.name || "").toLowerCase();
+    if (nameLower.includes("basic")) daily = 32;
+    else if (nameLower.includes("medium")) daily = 66;
+    else if (nameLower.includes("advance")) daily = 136;
+    else if (nameLower.includes("bronze")) daily = 288;
+    else if (nameLower.includes("silver")) daily = 592;
+    else if (nameLower.includes("gold")) daily = 1140;
+    else if (nameLower.includes("diamond")) daily = 2340;
+    else if (nameLower.includes("platinum")) daily = 4000;
+    else daily = Math.round(price * 0.05);
+
+    total = Math.round(daily * expiryDays);
+  }
+
   const netProfit = Math.max(0, total - price);
-  const returnPercent = pkg.returnPercent || (price > 0 ? `${Math.round((netProfit / price) * 100)}%` : "80%");
+  const profitPct = price > 0 ? Math.round((netProfit / price) * 100) : 80;
+  const returnPercent = pkg.returnPercent || `${profitPct}%`;
   const expiry = pkg.expiry || `${expiryDays} Days`;
   const badge = pkg.badge || (price >= 3000 && price <= 5000 ? "Recommended" : price >= 10000 ? "VIP Elite" : "Standard");
   const popular = pkg.popular ?? (badge === "Recommended");
@@ -187,11 +209,13 @@ const mapPackageData = (pkg: any) => {
     netProfit,
     returnPercent,
     expiry,
+    expiryDays,
     badge,
     description,
     popular
   };
 };
+
 
 
 export default function Home() {
