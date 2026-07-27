@@ -167,21 +167,24 @@ const fallbackPackages = [
 ];
 
 const mapPackageData = (pkg: any) => {
-  const price = pkg.price || 0;
-  const daily = pkg.dailyRoi || pkg.daily || 0;
-  const total = pkg.totalReturn || pkg.total || (daily * (pkg.expiryDays || 25));
-  const returnPercent = pkg.returnPercent || `${Math.round(((total - price) / Math.max(1, price)) * 100)}%`;
-  const expiry = pkg.expiry || `${pkg.expiryDays || 25} Days`;
+  const price = Number(pkg.price) || 0;
+  const daily = Number(pkg.dailyRoi) || Number(pkg.daily) || 0;
+  const expiryDays = Number(pkg.expiryDays) || 25;
+  const total = Number(pkg.totalReturn) || Number(pkg.total) || (daily > 0 ? daily * expiryDays : Math.round(price * 1.8));
+  const netProfit = Math.max(0, total - price);
+  const returnPercent = pkg.returnPercent || (price > 0 ? `${Math.round((netProfit / price) * 100)}%` : "80%");
+  const expiry = pkg.expiry || `${expiryDays} Days`;
   const badge = pkg.badge || (price >= 3000 && price <= 5000 ? "Recommended" : price >= 10000 ? "VIP Elite" : "Standard");
   const popular = pkg.popular ?? (badge === "Recommended");
   const description = pkg.description || "Package node for earning daily passive returns.";
 
   return {
     ...pkg,
-    name: pkg.name,
+    name: pkg.name || "Package",
     price,
     daily,
     total,
+    netProfit,
     returnPercent,
     expiry,
     badge,
@@ -189,6 +192,7 @@ const mapPackageData = (pkg: any) => {
     popular
   };
 };
+
 
 export default function Home() {
 
@@ -807,40 +811,47 @@ export default function Home() {
 
                 {/* Simulation Output */}
                 {(() => {
-                  const currentSimPack = packages[selectedPackIndex] || packages[0] || fallbackPackages[0];
+                  const rawPack = packages[selectedPackIndex] || packages[0] || fallbackPackages[0];
+                  const currentSimPack = mapPackageData(rawPack);
+                  const priceVal = Number(currentSimPack.price) || 0;
+                  const dailyVal = Number(currentSimPack.daily) || 0;
+                  const totalVal = Number(currentSimPack.total) || (dailyVal > 0 ? dailyVal * 25 : Math.round(priceVal * 1.8));
+                  const netVal = Math.max(0, totalVal - priceVal);
+
                   return (
                     <div className="p-5 rounded-2xl bg-zinc-900/40 shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-4">
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-zinc-400 font-medium">Selected Package</span>
-                        <span className="text-white font-bold">{currentSimPack?.name}</span>
+                        <span className="text-white font-bold">{currentSimPack.name}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-zinc-400 font-medium">One-Time Investment</span>
-                        <span className="text-white font-bold">₹{currentSimPack?.price?.toLocaleString()}</span>
+                        <span className="text-white font-bold">₹{priceVal.toLocaleString("en-IN")}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-zinc-400 font-medium">Daily Income (ROI)</span>
-                        <span className="text-emerald-400 font-bold">₹{currentSimPack?.daily?.toLocaleString()} / day</span>
+                        <span className="text-emerald-400 font-bold">₹{dailyVal.toLocaleString("en-IN")} / day</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-zinc-400 font-medium">Return Percentage</span>
-                        <span className="text-white font-semibold">{currentSimPack?.returnPercent}</span>
+                        <span className="text-white font-semibold">{currentSimPack.returnPercent}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-zinc-400 font-medium">Package Expiry Period</span>
-                        <span className="text-zinc-300 font-semibold">{currentSimPack?.expiry}</span>
+                        <span className="text-zinc-300 font-semibold">{currentSimPack.expiry}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-zinc-400 font-medium">Net Profit Amount</span>
-                        <span className="text-emerald-400 font-bold">₹{((currentSimPack?.total || 0) - (currentSimPack?.price || 0)).toLocaleString()}</span>
+                        <span className="text-emerald-400 font-bold">₹{netVal.toLocaleString("en-IN")}</span>
                       </div>
                       <div className="border-t border-zinc-800 pt-4 flex justify-between items-center">
                         <span className="text-sm text-zinc-350 font-bold uppercase tracking-wider">Total Maturity Income</span>
-                        <span className="text-2xl font-black text-[#ef233c] font-manrope">₹{currentSimPack?.total?.toLocaleString()}</span>
+                        <span className="text-2xl font-black text-[#ef233c] font-manrope">₹{totalVal.toLocaleString("en-IN")}</span>
                       </div>
                     </div>
                   );
                 })()}
+
 
               </div>
             </div>
