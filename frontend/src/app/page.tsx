@@ -75,7 +75,123 @@ const renderLucideIcon = (iconName: string) => {
   }
 };
 
+const fallbackPackages = [
+  {
+    name: "Basic",
+    price: 499,
+    daily: 32,
+    total: 800,
+    returnPercent: "60%",
+    expiry: "25 Days",
+    badge: "Starter",
+    description: "Entry level membership to start earning daily.",
+    popular: false
+  },
+  {
+    name: "Medium",
+    price: 999,
+    daily: 66,
+    total: 1650,
+    returnPercent: "65%",
+    expiry: "25 Days",
+    badge: "Standard",
+    description: "Stepping stone to boost your daily passive earnings.",
+    popular: false
+  },
+  {
+    name: "Advance",
+    price: 1999,
+    daily: 136,
+    total: 3400,
+    returnPercent: "70%",
+    expiry: "25 Days",
+    badge: "Popular",
+    description: "Most popular tier for standard network members.",
+    popular: false
+  },
+  {
+    name: "Bronze",
+    price: 3999,
+    daily: 288,
+    total: 7200,
+    returnPercent: "80%",
+    expiry: "25 Days",
+    badge: "Recommended",
+    description: "High returns package with solid profitability ratios.",
+    popular: true
+  },
+  {
+    name: "Silver",
+    price: 7999,
+    daily: 592,
+    total: 14800,
+    returnPercent: "85%",
+    expiry: "25 Days",
+    badge: "Premium",
+    description: "Premium yield package for active network nodes.",
+    popular: false
+  },
+  {
+    name: "Gold",
+    price: 14999,
+    daily: 1140,
+    total: 28500,
+    returnPercent: "90%",
+    expiry: "25 Days",
+    badge: "VIP Elite",
+    description: "VIP plan with massive daily return rates.",
+    popular: false
+  },
+  {
+    name: "Diamond",
+    price: 29999,
+    daily: 2340,
+    total: 58500,
+    returnPercent: "95%",
+    expiry: "25 Days",
+    badge: "Top Tier",
+    description: "Ultimate package for major network team leaders.",
+    popular: false
+  },
+  {
+    name: "Platinum",
+    price: 49999,
+    daily: 4000,
+    total: 100000,
+    returnPercent: "100%",
+    expiry: "25 Days",
+    badge: "Ultimate VIP",
+    description: "Highest passive income return tier available.",
+    popular: false
+  }
+];
+
+const mapPackageData = (pkg: any) => {
+  const price = pkg.price || 0;
+  const daily = pkg.dailyRoi || pkg.daily || 0;
+  const total = pkg.totalReturn || pkg.total || (daily * (pkg.expiryDays || 25));
+  const returnPercent = pkg.returnPercent || `${Math.round(((total - price) / Math.max(1, price)) * 100)}%`;
+  const expiry = pkg.expiry || `${pkg.expiryDays || 25} Days`;
+  const badge = pkg.badge || (price >= 3000 && price <= 5000 ? "Recommended" : price >= 10000 ? "VIP Elite" : "Standard");
+  const popular = pkg.popular ?? (badge === "Recommended");
+  const description = pkg.description || "Package node for earning daily passive returns.";
+
+  return {
+    ...pkg,
+    name: pkg.name,
+    price,
+    daily,
+    total,
+    returnPercent,
+    expiry,
+    badge,
+    description,
+    popular
+  };
+};
+
 export default function Home() {
+
   const { user } = useAuth();
   const [selectedPackIndex, setSelectedPackIndex] = useState(3); // Default to Bronze (₹3,999)
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -84,20 +200,35 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [businessModel, setBusinessModel] = useState<any | null>(null);
+  const [packages, setPackages] = useState<any[]>(fallbackPackages);
 
   useEffect(() => {
-    const fetchBusinessModel = async () => {
+    const fetchLandingData = async () => {
+      // 1. Fetch business model
       try {
         const res = await api.get("/auth/business-model");
-        if (res.success) {
-          setBusinessModel(res.data);
-        }
+        if (res.success) setBusinessModel(res.data);
       } catch (err) {
         console.error("Error fetching business model:", err);
       }
+
+      // 2. Fetch live active packages updated by admin
+      try {
+        const pkgRes = await api.get("/user/packages");
+        if (pkgRes.success && Array.isArray(pkgRes.data) && pkgRes.data.length > 0) {
+          const sorted = pkgRes.data
+            .sort((a: any, b: any) => (a.price || 0) - (b.price || 0))
+            .map(mapPackageData);
+          setPackages(sorted);
+        }
+      } catch (err) {
+        console.error("Error fetching live landing packages:", err);
+      }
     };
-    fetchBusinessModel();
+
+    fetchLandingData();
   }, []);
+
 
   const fallbackModel = {
     businessModelTitle: "How Pocket Money Generates Returns",
@@ -161,98 +292,8 @@ export default function Home() {
     }
   ];
 
-  const packages = [
-    {
-      name: "Basic",
-      price: 499,
-      daily: 32,
-      total: 800,
-      returnPercent: "60%",
-      expiry: "25 Days",
-      badge: "Starter",
-      description: "Entry level membership to start earning daily.",
-      popular: false
-    },
-    {
-      name: "Medium",
-      price: 999,
-      daily: 66,
-      total: 1650,
-      returnPercent: "65%",
-      expiry: "25 Days",
-      badge: "Standard",
-      description: "Stepping stone to boost your daily passive earnings.",
-      popular: false
-    },
-    {
-      name: "Advance",
-      price: 1999,
-      daily: 136,
-      total: 3400,
-      returnPercent: "70%",
-      expiry: "25 Days",
-      badge: "Popular",
-      description: "Most popular tier for standard network members.",
-      popular: false
-    },
-    {
-      name: "Bronze",
-      price: 3999,
-      daily: 288,
-      total: 7200,
-      returnPercent: "80%",
-      expiry: "25 Days",
-      badge: "Recommended",
-      description: "High returns package with solid profitability ratios.",
-      popular: true
-    },
-    {
-      name: "Silver",
-      price: 7999,
-      daily: 592,
-      total: 14800,
-      returnPercent: "85%",
-      expiry: "25 Days",
-      badge: "Premium",
-      description: "Premium yield package for active network nodes.",
-      popular: false
-    },
-    {
-      name: "Gold",
-      price: 14999,
-      daily: 1140,
-      total: 28500,
-      returnPercent: "90%",
-      expiry: "25 Days",
-      badge: "VIP Elite",
-      description: "VIP plan with massive daily return rates.",
-      popular: false
-    },
-    {
-      name: "Diamond",
-      price: 29999,
-      daily: 2340,
-      total: 58500,
-      returnPercent: "95%",
-      expiry: "25 Days",
-      badge: "Top Tier",
-      description: "Ultimate package for major network team leaders.",
-      popular: false
-    },
-    {
-      name: "Platinum",
-      price: 49999,
-      daily: 4000,
-      total: 100000,
-      returnPercent: "100%",
-      expiry: "25 Days",
-      badge: "Ultimate VIP",
-      description: "Highest passive income return tier available.",
-      popular: false
-    }
-  ];
-
   return (
+
     <div className="min-h-screen bg-black text-white font-sans selection:bg-[#ef233c] selection:text-white relative overflow-x-hidden">
       
       {/* Global Background Particles & Gradients */}
@@ -765,36 +806,42 @@ export default function Home() {
                 </div>
 
                 {/* Simulation Output */}
-                <div className="p-5 rounded-2xl bg-zinc-900/40 shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-4">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-zinc-400 font-medium">Selected Package</span>
-                    <span className="text-white font-bold">{packages[selectedPackIndex]?.name}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-zinc-400 font-medium">One-Time Investment</span>
-                    <span className="text-white font-bold">₹{packages[selectedPackIndex]?.price.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-zinc-400 font-medium">Daily Income (ROI)</span>
-                    <span className="text-emerald-400 font-bold">₹{packages[selectedPackIndex]?.daily.toLocaleString()} / day</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-zinc-400 font-medium">Return Percentage</span>
-                    <span className="text-white font-semibold">{packages[selectedPackIndex]?.returnPercent}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-zinc-400 font-medium">Package Expiry Period</span>
-                    <span className="text-zinc-300 font-semibold">{packages[selectedPackIndex]?.expiry}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-zinc-400 font-medium">Net Profit Amount</span>
-                    <span className="text-emerald-400 font-bold">₹{((packages[selectedPackIndex]?.total || 0) - (packages[selectedPackIndex]?.price || 0)).toLocaleString()}</span>
-                  </div>
-                  <div className="border-t border-zinc-800 pt-4 flex justify-between items-center">
-                    <span className="text-sm text-zinc-350 font-bold uppercase tracking-wider">Total Maturity Income</span>
-                    <span className="text-2xl font-black text-[#ef233c] font-manrope">₹{packages[selectedPackIndex]?.total.toLocaleString()}</span>
-                  </div>
-                </div>
+                {(() => {
+                  const currentSimPack = packages[selectedPackIndex] || packages[0] || fallbackPackages[0];
+                  return (
+                    <div className="p-5 rounded-2xl bg-zinc-900/40 shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-4">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-zinc-400 font-medium">Selected Package</span>
+                        <span className="text-white font-bold">{currentSimPack?.name}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-zinc-400 font-medium">One-Time Investment</span>
+                        <span className="text-white font-bold">₹{currentSimPack?.price?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-zinc-400 font-medium">Daily Income (ROI)</span>
+                        <span className="text-emerald-400 font-bold">₹{currentSimPack?.daily?.toLocaleString()} / day</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-zinc-400 font-medium">Return Percentage</span>
+                        <span className="text-white font-semibold">{currentSimPack?.returnPercent}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-zinc-400 font-medium">Package Expiry Period</span>
+                        <span className="text-zinc-300 font-semibold">{currentSimPack?.expiry}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-zinc-400 font-medium">Net Profit Amount</span>
+                        <span className="text-emerald-400 font-bold">₹{((currentSimPack?.total || 0) - (currentSimPack?.price || 0)).toLocaleString()}</span>
+                      </div>
+                      <div className="border-t border-zinc-800 pt-4 flex justify-between items-center">
+                        <span className="text-sm text-zinc-350 font-bold uppercase tracking-wider">Total Maturity Income</span>
+                        <span className="text-2xl font-black text-[#ef233c] font-manrope">₹{currentSimPack?.total?.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+
               </div>
             </div>
           </div>
