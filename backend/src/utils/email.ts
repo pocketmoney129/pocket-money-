@@ -3,9 +3,10 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "pocketmoneyhelp129@gmail.com",
-    pass: "lgikcpkichikrelg" // Gmail App password
+    user: process.env.EMAIL_USER || "pocketmoneyhelp129@gmail.com",
+    pass: process.env.EMAIL_PASS || "lgikcpkichikrelg" // Gmail App password
   }
+
 });
 
 const defaultHtmlTemplate = (title: string, bodyContent: string) => `

@@ -933,7 +933,7 @@ export default function Home() {
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-[#ef233c] to-transparent"></div>
               <div className="space-y-4">
                 {[
-                  { name: "utsav***", rank: 1, earning: 235400, badge: "Diamond" },
+                  { name: "roshan***", rank: 1, earning: 235400, badge: "Diamond" },
                   { name: "aman_ra***", rank: 2, earning: 184200, badge: "Diamond" },
                   { name: "rohit_s***", rank: 3, earning: 145900, badge: "Platinum" },
                   { name: "prakash_***", rank: 4, earning: 98400, badge: "Gold" },
