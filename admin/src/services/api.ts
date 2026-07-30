@@ -1,4 +1,13 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+const getApiUrl = () => {
+  let url = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api").trim();
+  url = url.replace(/\/+$/, "");
+  if (!url.endsWith("/api")) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
+const API_URL = getApiUrl();
 
 interface RequestOptions extends RequestInit {
   body?: any;
@@ -27,8 +36,13 @@ const handleResponse = async (response: Response) => {
   try {
     data = text ? JSON.parse(text) : {};
   } catch (err) {
-    data = { success: false, message: "Response is not valid JSON" };
+    if (!response.ok) {
+      data = { success: false, message: `Server is warming up (Status ${response.status}). Please try again in 5 seconds.` };
+    } else {
+      data = { success: false, message: "Invalid JSON response from server" };
+    }
   }
+
 
   if (!response.ok) {
     if (response.status === 401 && typeof window !== "undefined") {
