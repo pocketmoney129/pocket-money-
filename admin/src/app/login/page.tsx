@@ -24,7 +24,8 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 font-sans overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#0e0101] via-black to-[#0e0101] flex items-center justify-center p-4 font-sans overflow-hidden relative">
+
       {/* Animated orbs */}
       <div className="fixed top-1/4 left-1/4 w-[500px] h-[500px] bg-[#ef233c]/15 rounded-full blur-[140px] float-glow-1 pointer-events-none" />
       <div className="fixed bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[#ef233c]/10 rounded-full blur-[120px] float-glow-2 pointer-events-none" />
@@ -54,7 +55,8 @@ export default function AdminLogin() {
         </div>
 
         {/* Login Card */}
-        <div className="bg-zinc-950/80 backdrop-blur-2xl border border-zinc-800 rounded-2xl p-7 shadow-2xl shadow-black space-y-5">
+        <div className="bg-zinc-950/90 backdrop-blur-2xl rounded-3xl p-7 shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative overflow-hidden space-y-5">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-[#ef233c] to-transparent" />
           {error && (
             <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold">
               {error}
@@ -70,7 +72,7 @@ export default function AdminLogin() {
                 <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none" />
                 <input type="text" required value={usernameOrEmail} onChange={e => setUsernameOrEmail(e.target.value)}
                   placeholder="admin"
-                  className="w-full pl-9 pr-4 py-3 border border-zinc-800 rounded-xl bg-zinc-900 text-white placeholder-zinc-600 focus:border-[#ef233c]/50 focus:outline-none text-xs transition-colors"
+                  className="w-full pl-9 pr-4 py-3 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:outline-none text-xs transition-colors"
                 />
               </div>
             </div>
@@ -83,7 +85,7 @@ export default function AdminLogin() {
                 <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none" />
                 <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-4 py-3 border border-zinc-800 rounded-xl bg-zinc-900 text-white placeholder-zinc-600 focus:border-[#ef233c]/50 focus:outline-none text-xs transition-colors"
+                  className="w-full pl-9 pr-4 py-3 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:outline-none text-xs transition-colors"
                 />
               </div>
             </div>
@@ -94,6 +96,7 @@ export default function AdminLogin() {
             </button>
           </form>
         </div>
+
 
         <p className="text-center text-[9px] text-zinc-700 font-semibold">
           © 2025 PocketMoney Platform. All rights reserved.

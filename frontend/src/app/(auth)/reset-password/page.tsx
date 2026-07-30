@@ -61,7 +61,8 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl sm:px-10">
+    <div className="bg-zinc-950/90 backdrop-blur-2xl py-8 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-3xl sm:px-10 relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-[#ef233c] to-transparent" />
       {success ? (
         <div className="space-y-4">
           <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold text-center">
@@ -88,7 +89,7 @@ function ResetPasswordForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full px-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+              className="block w-full px-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
 
@@ -106,7 +107,7 @@ function ResetPasswordForm() {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="Enter 6-digit code"
-                className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+                className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
               />
             </div>
           </div>
@@ -125,7 +126,7 @@ function ResetPasswordForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+                className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
               />
             </div>
           </div>
@@ -144,7 +145,7 @@ function ResetPasswordForm() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-650 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+                className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
               />
             </div>
           </div>
@@ -170,19 +171,17 @@ function ResetPasswordForm() {
 
 export default function ResetPassword() {
   return (
-    <div className="min-h-screen bg-black text-zinc-300 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-[#0e0101] via-black to-[#0e0101] text-zinc-300 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
       {/* Floating Ambient Glowing Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#ef233c]/5 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[6s]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-[#ef233c]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#ef233c]/15 rounded-full blur-[150px] pointer-events-none float-glow-1" />
+      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-[#ef233c]/10 rounded-full blur-[140px] pointer-events-none float-glow-2" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <Link href="/forgot-password" className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-500 hover:text-white mb-6 transition-colors">
           <ArrowLeft size={14} /> Back
         </Link>
         <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#ef233c]/15 border border-[#ef233c]/20 flex items-center justify-center text-white font-black text-lg shadow-[0_0_15px_rgba(239,35,60,0.15)]">
-            P
-          </div>
+          <img src="/logo-icon.png" alt="Pocket Money Logo" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(239,35,60,0.3)]" />
           <span className="font-extrabold text-xl text-white font-manrope">
             Pocket<span className="text-[#ef233c]">Money</span>
           </span>
@@ -194,7 +193,7 @@ export default function ResetPassword() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
         <Suspense fallback={
-          <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl flex justify-center items-center">
+          <div className="bg-zinc-950/90 backdrop-blur-2xl py-8 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-transparent rounded-3xl flex justify-center items-center">
             <Loader2 className="animate-spin text-zinc-500" size={24} />
           </div>
         }>
@@ -204,3 +203,4 @@ export default function ResetPassword() {
     </div>
   );
 }
+

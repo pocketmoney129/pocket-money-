@@ -130,7 +130,8 @@ function RegisterForm() {
 
   if (step === "otp") {
     return (
-      <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl sm:px-10">
+      <div className="bg-zinc-950/90 backdrop-blur-2xl py-8 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-3xl sm:px-10 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-[#ef233c] to-transparent" />
         {successMessage && (
           <div className="mb-4 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold leading-relaxed">
             {successMessage}
@@ -161,7 +162,7 @@ function RegisterForm() {
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
               placeholder="123456"
-              className="block w-full px-4 py-3.5 border border-zinc-800 rounded-2xl bg-zinc-900/60 text-center text-xl font-black tracking-[10px] text-[#ef233c] focus:border-[#ef233c] focus:shadow-[0_0_15px_rgba(239,35,60,0.15)] focus:outline-none transition-all font-mono"
+              className="block w-full px-4 py-3.5 border border-transparent rounded-2xl bg-zinc-900/80 text-center text-xl font-black tracking-[10px] text-[#ef233c] focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_15px_rgba(239,35,60,0.15)] focus:outline-none transition-all font-mono"
             />
           </div>
 
@@ -190,7 +191,8 @@ function RegisterForm() {
   }
 
   return (
-    <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl sm:px-10">
+    <div className="bg-zinc-950/90 backdrop-blur-2xl py-8 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-3xl sm:px-10 relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-[#ef233c] to-transparent" />
       {error && (
         <div className="mb-4 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">
           {error}
@@ -212,7 +214,7 @@ function RegisterForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
-              className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+              className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
         </div>
@@ -231,7 +233,7 @@ function RegisterForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
-              className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+              className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
         </div>
@@ -250,7 +252,7 @@ function RegisterForm() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 9876543210"
-              className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all font-mono"
+              className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all font-mono"
             />
           </div>
         </div>
@@ -270,12 +272,12 @@ function RegisterForm() {
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
               placeholder="e.g. PM5001 or admin"
-              className={`block w-full pl-10 pr-10 py-2.5 border rounded-xl bg-zinc-900/50 font-semibold placeholder-zinc-600 focus:outline-none text-sm transition-all font-mono ${
+              className={`block w-full pl-10 pr-10 py-2.5 border rounded-xl bg-zinc-900/80 font-semibold placeholder-zinc-500 focus:outline-none text-sm transition-all font-mono ${
                 sponsorName
                   ? "border-emerald-500 text-emerald-400 focus:border-emerald-400 focus:shadow-[0_0_12px_rgba(16,185,129,0.12)]"
                   : sponsorError
                   ? "border-rose-500 text-rose-400 focus:border-rose-500"
-                  : "border-zinc-850 text-[#ef233c] focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)]"
+                  : "border-transparent text-[#ef233c] focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)]"
               }`}
             />
             {/* Status icon in input */}
@@ -318,13 +320,13 @@ function RegisterForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="block w-full pl-10 pr-4 py-2.5 border border-zinc-850 rounded-xl bg-zinc-900/50 text-white placeholder-zinc-600 focus:border-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+              className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
             />
           </div>
         </div>
 
         {/* Info notice about auto-assigned User ID */}
-        <div className="p-3 bg-zinc-900/60 border border-zinc-850 rounded-xl flex items-center gap-2.5 text-[11px] text-zinc-400">
+        <div className="p-3 bg-zinc-900/60 border border-transparent rounded-xl flex items-center gap-2.5 text-[11px] text-zinc-400">
           <ShieldCheck size={16} className="text-[#ef233c] shrink-0" />
           <span>Your official <strong>User ID & Referral Code</strong> (e.g. PM5002) will be auto-generated upon registration.</span>
         </div>
@@ -352,10 +354,10 @@ function RegisterForm() {
 
 export default function Register() {
   return (
-    <div className="min-h-screen bg-black text-zinc-300 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-[#0e0101] via-black to-[#0e0101] text-zinc-300 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
       {/* Floating Ambient Glowing Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#ef233c]/5 rounded-full blur-[100px] pointer-events-none animate-pulse duration-[6s]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-[#ef233c]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#ef233c]/15 rounded-full blur-[150px] pointer-events-none float-glow-1" />
+      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-[#ef233c]/10 rounded-full blur-[140px] pointer-events-none float-glow-2" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
         <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-500 hover:text-white mb-6 transition-colors">
@@ -381,7 +383,7 @@ export default function Register() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
         <Suspense fallback={
-          <div className="bg-zinc-950/80 backdrop-blur-md py-8 px-6 shadow-[0_0_30px_rgba(239,35,60,0.05)] border border-zinc-900 rounded-3xl flex justify-center items-center">
+          <div className="bg-zinc-950/90 backdrop-blur-2xl py-8 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-transparent rounded-3xl flex justify-center items-center">
             <Loader2 className="animate-spin text-zinc-500" size={24} />
           </div>
         }>
@@ -391,3 +393,4 @@ export default function Register() {
     </div>
   );
 }
+
