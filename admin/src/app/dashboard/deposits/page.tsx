@@ -237,7 +237,7 @@ export default function AdminDepositsPage() {
               <div className="border border-zinc-800 rounded-2xl overflow-hidden bg-zinc-900 h-56 flex items-center justify-center">
                 {selectedDep.screenshot ? (
                   <img
-                    src={selectedDep.screenshot?.startsWith("http") ? selectedDep.screenshot : `${BACKEND}${selectedDep.screenshot}`}
+                    src={selectedDep.screenshot?.startsWith("http") || selectedDep.screenshot?.startsWith("data:") ? selectedDep.screenshot : `${BACKEND}${selectedDep.screenshot}`}
                     alt="Payment proof"
                     className="max-h-full max-w-full object-contain"
                   />

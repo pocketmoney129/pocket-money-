@@ -14,70 +14,71 @@ const configureCloudinary = () => {
 
 configureCloudinary();
 
-export const uploadBufferToCloudinary = (buffer: Buffer, folder = "pocket_money"): Promise<string> => {
-  return new Promise((resolve) => {
-    try {
-      configureCloudinary();
-      const uploadStream = cloudinary.uploader.upload_stream(
-        { folder, resource_type: "auto" },
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary Stream Upload Error:", error);
-            resolve("https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400");
-          } else if (result && result.secure_url) {
-            resolve(result.secure_url);
-          } else {
-            resolve("https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400");
-          }
-        }
-      );
-      uploadStream.end(buffer);
-    } catch (err) {
-      console.error("Cloudinary Stream Exception:", err);
-      resolve("https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400");
-    }
-  });
-};
-
 export const uploadToCloudinary = async (fileOrPath: any, folder = "pocket_money"): Promise<string> => {
   try {
     configureCloudinary();
 
     if (!fileOrPath) return "";
 
-    // Express.Multer.File object with memory buffer
+    // 1. Express.Multer.File object with memory buffer
     if (typeof fileOrPath === "object" && fileOrPath.buffer) {
-      return await uploadBufferToCloudinary(fileOrPath.buffer, folder);
+      const mime = fileOrPath.mimetype || "image/jpeg";
+      const base64Data = fileOrPath.buffer.toString("base64");
+      const dataUri = `data:${mime};base64,${base64Data}`;
+
+      try {
+        const result = await cloudinary.uploader.upload(dataUri, {
+          folder,
+          resource_type: "auto"
+        });
+        if (result && result.secure_url) {
+          return result.secure_url;
+        }
+      } catch (err: any) {
+        console.error("Cloudinary upload error, using dataUri fallback:", err?.message || err);
+      }
+      return dataUri;
     }
 
-    // Object with file path from disk
+    // 2. Object with file path from disk
     if (typeof fileOrPath === "object" && fileOrPath.path) {
-      const result = await cloudinary.uploader.upload(fileOrPath.path, {
-        folder,
-        resource_type: "auto"
-      });
-      if (fs.existsSync(fileOrPath.path)) {
-        fs.unlink(fileOrPath.path, () => {});
+      try {
+        const result = await cloudinary.uploader.upload(fileOrPath.path, {
+          folder,
+          resource_type: "auto"
+        });
+        if (fs.existsSync(fileOrPath.path)) {
+          fs.unlink(fileOrPath.path, () => {});
+        }
+        if (result && result.secure_url) return result.secure_url;
+      } catch (err: any) {
+        console.error("Cloudinary path upload error:", err?.message || err);
       }
-      return result.secure_url;
     }
 
-    // Direct path string
+    // 3. Direct path string
     if (typeof fileOrPath === "string") {
-      const result = await cloudinary.uploader.upload(fileOrPath, {
-        folder,
-        resource_type: "auto"
-      });
-      if (fs.existsSync(fileOrPath)) {
-        fs.unlink(fileOrPath, () => {});
+      if (fileOrPath.startsWith("http") || fileOrPath.startsWith("data:")) {
+        return fileOrPath;
       }
-      return result.secure_url;
+      try {
+        const result = await cloudinary.uploader.upload(fileOrPath, {
+          folder,
+          resource_type: "auto"
+        });
+        if (fs.existsSync(fileOrPath)) {
+          fs.unlink(fileOrPath, () => {});
+        }
+        if (result && result.secure_url) return result.secure_url;
+      } catch (err: any) {
+        console.error("Cloudinary string upload error:", err?.message || err);
+      }
     }
 
     return "";
   } catch (error: any) {
-    console.error("Cloudinary Upload Error:", error);
-    return "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400";
+    console.error("Cloudinary Upload Outer Error:", error);
+    return "";
   }
 };
 
