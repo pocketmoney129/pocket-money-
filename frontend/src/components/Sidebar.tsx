@@ -47,8 +47,18 @@ interface NavGroup {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
-  const pathname = usePathname();
   const { user, logout } = useAuth();
+  const pathname = usePathname();
+  const [currentHash, setCurrentHash] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentHash(window.location.hash);
+    }
+    const handleHash = () => setCurrentHash(window.location.hash);
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
 
   const navGroups: NavGroup[] = [
     {
@@ -64,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       title: "PROFILE",
       icon: UserCircle,
       items: [
-        { name: "Account Profile Info", path: "/dashboard/profile", icon: UserCheck },
+        { name: "Profile", path: "/dashboard/profile", icon: UserCheck },
         { name: "Bank Details & UPI", path: "/dashboard/profile#bank-details", icon: Building2 },
         { name: "Update Password", path: "/dashboard/profile#change-password", icon: Lock }
       ]
@@ -204,7 +214,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               {isOpen && (
                 <div className="border-l border-zinc-850/80 ml-3.5 pl-3 py-1 space-y-1 transition-all">
                   {group.items.map((item) => {
-                    const isActive = pathname === item.path;
+                    const fullPath = pathname + (currentHash || "");
+                    const isActive = item.path.includes("#")
+                      ? fullPath === item.path
+                      : (pathname === item.path && (!currentHash || currentHash === "#profile"));
                     const ItemIcon = item.icon;
 
                     return (
