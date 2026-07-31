@@ -88,6 +88,27 @@ export const distributeRoi = async (): Promise<{ credited: number; skipped: numb
         continue;
       }
 
+      // Triple Guard: Check if a daily_roi transaction for this plan was already created today IST
+      const todayTxsQuery = query(
+        collection(db, "transactions"),
+        where("user", "==", userId),
+        where("type", "==", "daily_roi"),
+        where("planId", "==", planId)
+      );
+      const todayTxsSnap = await getDocs(todayTxsQuery);
+      const hasTodayTx = todayTxsSnap.docs.some(d => {
+        const t = d.data();
+        const txDateIST = t.createdAt ? new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date(t.createdAt)) : "";
+        return txDateIST === todayStr;
+      });
+
+      if (hasTodayTx) {
+        // Lock plan lastRoiDate to today to stay in sync
+        await updateDoc(doc(db, "userPlans", planId), { lastRoiDate: todayStr });
+        skipped++;
+        continue;
+      }
+
       // Fetch fresh user data for wallet balance
       const userDocRef = doc(db, "users", userId);
       const userSnap = await getDoc(userDocRef);
