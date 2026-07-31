@@ -75,8 +75,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       icon: UserCircle,
       items: [
         { name: "Profile", path: "/dashboard/profile", icon: UserCheck },
-        { name: "Bank Details & UPI", path: "/dashboard/profile#bank-details", icon: Building2 },
-        { name: "Update Password", path: "/dashboard/profile#change-password", icon: Lock }
+        { name: "Bank Details & UPI", path: "/dashboard/profile/bank", icon: Building2 },
+        { name: "Update Password", path: "/dashboard/profile/change-password", icon: Lock }
       ]
     },
     {
@@ -214,10 +214,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               {isOpen && (
                 <div className="border-l border-zinc-850/80 ml-3.5 pl-3 py-1 space-y-1 transition-all">
                   {group.items.map((item) => {
-                    const fullPath = pathname + (currentHash || "");
-                    const isActive = item.path.includes("#")
-                      ? fullPath === item.path
-                      : (pathname === item.path && (!currentHash || currentHash === "#profile"));
+                    const isActive = pathname === item.path;
                     const ItemIcon = item.icon;
 
                     return (
