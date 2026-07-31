@@ -21,7 +21,9 @@ import {
   createPackage,
   updatePackage,
   toggleMaintenance,
-  getMaintenanceStatus
+  getMaintenanceStatus,
+  getAdminRanks,
+  distributeRankBonus
 } from "../controllers/adminController";
 import { getAdminTickets } from "../controllers/ticketController";
 import { distributeRoi } from "../utils/roiCron";
@@ -36,12 +38,14 @@ router.get("/maintenance/status", getMaintenanceStatus);
 router.use(protect);
 router.use(adminOnly);
 
-// Users
+// Users & Ranks
 router.get("/stats", getAdminStats);
 router.get("/users", getAllUsers);
 router.post("/users/adjust-balance", adjustBalance);
 router.put("/users/status", updateUserStatus);
 router.delete("/users/:userId", deleteUser);
+router.get("/ranks", getAdminRanks);
+router.post("/ranks/distribute", distributeRankBonus);
 
 // Deposits
 router.get("/deposits", getAdminDeposits);

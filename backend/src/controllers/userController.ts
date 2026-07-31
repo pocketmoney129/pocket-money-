@@ -785,6 +785,18 @@ export const claimRankBonus = async (req: AuthRequest, res: Response): Promise<v
       createdAt: new Date().toISOString()
     });
 
+    // Create real-time notification for user
+    const notifId = doc(collection(db, "notifications")).id;
+    await setDoc(doc(db, "notifications", notifId), {
+      _id: notifId,
+      user: userId,
+      title: "🎉 Rank Milestone Bonus Unlocked!",
+      message: `Congratulations! You unlocked ${tier.name} with ${activeDirects} active paid direct referrals. Bonus of ₹${tier.bonusAmount.toLocaleString()} credited to your wallet!`,
+      read: false,
+      type: "rank_bonus",
+      createdAt: new Date().toISOString()
+    });
+
     res.json({
       success: true,
       message: `🎉 Congratulations! ${tier.name} Bonus of ₹${tier.bonusAmount.toLocaleString()} has been credited to your wallet!`,
@@ -797,6 +809,58 @@ export const claimRankBonus = async (req: AuthRequest, res: Response): Promise<v
 
   } catch (error: any) {
     console.error("Claim rank bonus error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+// @desc    Get user notifications
+// @route   GET /api/user/notifications
+// @access  Private
+export const getUserNotifications = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    const notifSnap = await getDocs(query(
+      collection(db, "notifications"),
+      where("user", "==", userId)
+    ));
+
+    const notifications = notifSnap.docs.map(docSnap => ({ _id: docSnap.id, ...docSnap.data() as any }));
+    notifications.sort((a: any, b: any) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+
+    const unreadCount = notifications.filter((n: any) => !n.read).length;
+
+    res.json({
+      success: true,
+      data: {
+        notifications: notifications.slice(0, 20),
+        unreadCount
+      }
+    });
+  } catch (error: any) {
+    console.error("Get notifications error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+// @desc    Mark notifications as read
+// @route   POST /api/user/notifications/mark-read
+// @access  Private
+export const markNotificationsRead = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    const notifSnap = await getDocs(query(
+      collection(db, "notifications"),
+      where("user", "==", userId),
+      where("read", "==", false)
+    ));
+
+    for (const docSnap of notifSnap.docs) {
+      await updateDoc(docSnap.ref, { read: true });
+    }
+
+    res.json({ success: true, message: "Notifications marked as read" });
+  } catch (error: any) {
+    console.error("Mark notifications read error:", error);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };

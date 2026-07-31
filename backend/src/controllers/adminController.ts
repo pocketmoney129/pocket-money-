@@ -1164,3 +1164,187 @@ export const getMaintenanceStatus = async (req: Request, res: Response): Promise
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+const RANK_TIERS_DEF = [
+  { id: "bronze", name: "Bronze Member", requiredDirects: 5, bonusAmount: 500 },
+  { id: "silver", name: "Silver Member", requiredDirects: 10, bonusAmount: 1500 },
+  { id: "gold", name: "Gold Member", requiredDirects: 25, bonusAmount: 5000 },
+  { id: "platinum", name: "Platinum Executive", requiredDirects: 50, bonusAmount: 15000 },
+  { id: "diamond", name: "Diamond Master", requiredDirects: 100, bonusAmount: 50000 },
+  { id: "crown", name: "Crown Legend", requiredDirects: 250, bonusAmount: 150000 }
+];
+
+// @desc    Get all users rank progression & achievement status for Admin
+// @route   GET /api/admin/ranks
+// @access  Private/Admin
+export const getAdminRanks = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const usersSnap = await getDocs(collection(db, "users"));
+    const allUsers = usersSnap.docs.map(d => ({ _id: d.id, ...d.data() as any }));
+
+    let totalBonusesDistributed = 0;
+    let totalAchieversCount = 0;
+    const rankUsers: any[] = [];
+
+    for (const u of allUsers) {
+      // Find direct referrals
+      const directDocs = allUsers.filter(item => item.sponsor === u._id);
+      const totalDirects = directDocs.length;
+      // Active paid directs: referrals with status === "active" AND an active package
+      const activePaidDirects = directDocs.filter(item => item.status === "active" && item.activePackage).length;
+
+      const claimedBonuses: string[] = u.claimedRankBonuses || [];
+
+      // Calculate current rank
+      let currentRank = RANK_TIERS_DEF[0];
+      for (let i = RANK_TIERS_DEF.length - 1; i >= 0; i--) {
+        if (activePaidDirects >= RANK_TIERS_DEF[i].requiredDirects) {
+          currentRank = RANK_TIERS_DEF[i];
+          break;
+        }
+      }
+
+      // Check eligible un-claimed ranks
+      const eligibleRanks = RANK_TIERS_DEF.filter(t => activePaidDirects >= t.requiredDirects && !claimedBonuses.includes(t.id));
+      const hasRankAchieved = activePaidDirects >= 5;
+      if (hasRankAchieved) totalAchieversCount++;
+
+      // Compute total bonus claimed by user
+      const userBonusTotal = claimedBonuses.reduce((acc, rId) => {
+        const t = RANK_TIERS_DEF.find(item => item.id === rId);
+        return acc + (t ? t.bonusAmount : 0);
+      }, 0);
+      totalBonusesDistributed += userBonusTotal;
+
+      rankUsers.push({
+        _id: u._id,
+        name: u.name,
+        username: u.username,
+        email: u.email,
+        phone: u.phone,
+        status: u.status,
+        walletBalance: u.walletBalance || 0,
+        totalDirects,
+        activePaidDirects,
+        currentRank,
+        claimedBonuses,
+        eligibleRanks,
+        userBonusTotal,
+        activePackage: u.activePackage ? "Active" : "No Plan"
+      });
+    }
+
+    // Sort by active paid directs desc
+    rankUsers.sort((a, b) => b.activePaidDirects - a.activePaidDirects);
+
+    res.json({
+      success: true,
+      data: {
+        totalAchieversCount,
+        totalBonusesDistributed,
+        rankUsers
+      }
+    });
+  } catch (error: any) {
+    console.error("Get admin ranks error:", error);
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
+// @desc    Admin manually approves / distributes Rank Bonus to user
+// @route   POST /api/admin/ranks/distribute
+// @access  Private/Admin
+export const distributeRankBonus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId, rankId } = req.body;
+    if (!userId || !rankId) {
+      res.status(400).json({ success: false, message: "User ID and Rank ID are required" });
+      return;
+    }
+
+    const tier = RANK_TIERS_DEF.find(t => t.id === rankId);
+    if (!tier) {
+      res.status(400).json({ success: false, message: "Invalid rank tier specified" });
+      return;
+    }
+
+    const userDocRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userDocRef);
+    if (!userSnap.exists()) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    const user = userSnap.data();
+    const claimedBonuses: string[] = user.claimedRankBonuses || [];
+
+    if (claimedBonuses.includes(rankId)) {
+      res.status(400).json({ success: false, message: `Bonus for ${tier.name} has already been distributed to this user.` });
+      return;
+    }
+
+    // Check active paid direct referrals requirement
+    const directSnap = await getDocs(query(
+      collection(db, "users"),
+      where("sponsor", "==", userId),
+      where("status", "==", "active")
+    ));
+
+    const activePaidDirects = directSnap.docs.filter(d => d.data().activePackage).length;
+    if (activePaidDirects < tier.requiredDirects) {
+      res.status(400).json({
+        success: false,
+        message: `User does not qualify yet. Required: ${tier.requiredDirects} active paid referrals, but current active paid count is ${activePaidDirects}. Referrals without an active plan do not qualify for bonus.`
+      });
+      return;
+    }
+
+    // Credit bonus to user wallet
+    const prevBalance = user.walletBalance || 0;
+    const newBalance = parseFloat((prevBalance + tier.bonusAmount).toFixed(2));
+    const newTotalIncome = parseFloat(((user.totalIncome || 0) + tier.bonusAmount).toFixed(2));
+    const updatedClaimed = [...claimedBonuses, rankId];
+
+    await updateDoc(userDocRef, {
+      walletBalance: newBalance,
+      totalIncome: newTotalIncome,
+      claimedRankBonuses: updatedClaimed,
+      updatedAt: new Date().toISOString()
+    });
+
+    // Create rank_bonus transaction record
+    const txId = doc(collection(db, "transactions")).id;
+    await setDoc(doc(db, "transactions", txId), {
+      _id: txId,
+      user: userId,
+      amount: tier.bonusAmount,
+      type: "rank_bonus",
+      description: `Rank Milestone Bonus — ${tier.name} (+₹${tier.bonusAmount.toLocaleString()})`,
+      balanceBefore: prevBalance,
+      balanceAfter: newBalance,
+      createdAt: new Date().toISOString()
+    });
+
+    // Create real-time notification for user
+    const notifId = doc(collection(db, "notifications")).id;
+    await setDoc(doc(db, "notifications", notifId), {
+      _id: notifId,
+      user: userId,
+      title: "🎉 Rank Bonus Distributed!",
+      message: `Congratulations! You qualified for ${tier.name} with ${activePaidDirects} active paid direct referrals. A cash bonus of ₹${tier.bonusAmount.toLocaleString()} has been credited to your wallet!`,
+      read: false,
+      type: "rank_bonus",
+      createdAt: new Date().toISOString()
+    });
+
+    res.json({
+      success: true,
+      message: `Successfully distributed ₹${tier.bonusAmount.toLocaleString()} ${tier.name} Bonus to user ${user.name} (@${user.username}).`
+    });
+
+  } catch (error: any) {
+    console.error("Distribute rank bonus error:", error);
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+

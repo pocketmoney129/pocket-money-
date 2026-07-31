@@ -19,7 +19,8 @@ import {
   X,
   Loader2,
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  Trophy
 } from "lucide-react";
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
@@ -46,7 +47,8 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
     { name: "Overview", path: "/dashboard", icon: LayoutDashboard },
     { name: "KYC Verifications", path: "/dashboard/kyc", icon: ShieldCheck },
     { name: "User Directory", path: "/dashboard/users", icon: Users },
-    { name: "Deposits Desk", path: "/dashboard/deposits", icon: ArrowDownCircle },
+    { name: "Rank Progression", path: "/dashboard/ranks", icon: Trophy },
+    { name: "Deposit Approvals", path: "/dashboard/deposits", icon: ArrowDownCircle },
     { name: "Withdrawals Desk", path: "/dashboard/withdrawals", icon: ArrowUpCircle },
     { name: "MLM Packages", path: "/dashboard/packages", icon: PackagePlus },
     { name: "Support Desk", path: "/dashboard/support", icon: LifeBuoy },

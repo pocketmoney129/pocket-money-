@@ -13,7 +13,9 @@ import {
   getUserPlans,
   getRankProgress,
   claimRankBonus,
-  changePassword
+  changePassword,
+  getUserNotifications,
+  markNotificationsRead
 } from "../controllers/userController";
 
 const router = Router();
@@ -43,6 +45,8 @@ router.post("/purchase-package", purchasePackage);
 router.get("/my-plans", getUserPlans);
 router.get("/rank-progress", getRankProgress);
 router.post("/claim-rank-bonus", claimRankBonus);
+router.get("/notifications", getUserNotifications);
+router.post("/notifications/mark-read", markNotificationsRead);
 
 export default router;
 
