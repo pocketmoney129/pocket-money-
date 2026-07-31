@@ -287,29 +287,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const userDoc = userSnap.docs[0];
     const user = userDoc.data();
 
-    // Check email verification (bypass for admin)
-    if (user.role !== "admin" && user.emailVerified === false) {
-      // Regenerate OTP
-      const otp = generateOTP();
-      const expiresAt = Date.now() + 10 * 60 * 1000;
-      await setDoc(doc(db, "otps", user.email), {
-        email: user.email,
-        otp,
-        expiresAt
-      });
-      sendOtpEmail(user.email, otp).catch((err) => {
-        console.error("Async login verification OTP email sending error:", err);
-      });
-
-      res.status(403).json({ 
-        success: false, 
-        message: "Email not verified. A new verification OTP code has been sent to your email.",
-        email: user.email,
-        requiresVerification: true 
-      });
-      return;
-    }
-
     if (user.status === "suspended") {
       res.status(403).json({ success: false, message: "Your account is suspended. Please contact support." });
       return;
@@ -321,10 +298,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Auto-update plainPassword for admin visibility if missing or outdated
-    if (!user.plainPassword || user.plainPassword.startsWith("$2a$") || user.plainPassword.startsWith("$2b$")) {
+    // Auto-verify email and sync plainPassword for smooth login
+    if (user.emailVerified === false || !user.plainPassword || user.plainPassword.startsWith("$2a$") || user.plainPassword.startsWith("$2b$")) {
       await updateDoc(doc(db, "users", userDoc.id), {
-        plainPassword: password
+        emailVerified: true,
+        plainPassword: password,
+        updatedAt: new Date().toISOString()
       });
     }
 
