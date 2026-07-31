@@ -12,6 +12,7 @@ import {
   updateDoc 
 } from "firebase/firestore";
 import { sendDepositEmail, sendWithdrawEmail } from "../utils/email";
+import { distributeRoi } from "../utils/roiCron";
 
 // @desc    Get user's transaction history
 // @route   GET /api/transactions
@@ -296,6 +297,9 @@ export const getWalletSummary = async (req: AuthRequest, res: Response): Promise
     }
 
     const user = userSnap.data();
+
+    // Ensure today's ROI distribution is up to date in real-time
+    await distributeRoi().catch(err => console.error("Realtime ROI check error:", err));
 
     // Parallelize core queries for ultra-fast response
     const [directSnap, txSnap, withSnap] = await Promise.all([

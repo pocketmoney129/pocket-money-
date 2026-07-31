@@ -89,6 +89,24 @@ export default function AdminPackagesPage() {
     } catch { /* silent */ }
   };
 
+  const [runningRoi, setRunningRoi] = useState(false);
+
+  const handleTriggerRoi = async () => {
+    setRunningRoi(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const res = await api.post("/admin/distribute-roi", {});
+      if (res.success) {
+        setSuccess(res.message || "Daily ROI distributed successfully.");
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to distribute daily ROI");
+    } finally {
+      setRunningRoi(false);
+    }
+  };
+
   return (
     <div className="space-y-6 font-sans">
       <div className="flex justify-between items-center">
@@ -101,10 +119,20 @@ export default function AdminPackagesPage() {
             <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">Configure tiers, ROI & commission splits</p>
           </div>
         </div>
-        <button onClick={openCreate}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#ef233c] hover:bg-[#d90429] text-white text-xs font-bold transition-all shadow-lg shadow-[#ef233c]/25">
-          <Plus size={15} /> New Package
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleTriggerRoi}
+            disabled={runningRoi}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 text-xs font-bold transition-all disabled:opacity-50"
+          >
+            {runningRoi ? <Loader2 size={15} className="animate-spin text-amber-400" /> : <TrendingUp size={15} />}
+            Run Daily ROI Now
+          </button>
+          <button onClick={openCreate}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#ef233c] hover:bg-[#d90429] text-white text-xs font-bold transition-all shadow-lg shadow-[#ef233c]/25">
+            <Plus size={15} /> New Package
+          </button>
+        </div>
       </div>
 
       {success && <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">{success}</div>}

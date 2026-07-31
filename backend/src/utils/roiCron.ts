@@ -188,9 +188,10 @@ export const distributeRoi = async (): Promise<{ credited: number; skipped: numb
 };
 
 /**
- * Schedule daily ROI cron — runs at 12:01 AM IST (18:31 UTC)
+ * Schedule daily ROI cron — runs at 12:01 AM IST (18:31 UTC), on server startup, and periodically
  */
 export const startRoiCron = () => {
+  // 1. Cron schedule at 12:01 AM IST
   cron.schedule("31 18 * * *", async () => {
     console.log("[ROI Cron] Triggered at 12:01 AM IST");
     await distributeRoi();
@@ -198,5 +199,16 @@ export const startRoiCron = () => {
     timezone: "UTC"
   });
 
-  console.log("[ROI Cron] Daily ROI cron job scheduled for 12:01 AM IST (multi-plan support active).");
+  // 2. Initial distribution check 5 seconds after server startup
+  setTimeout(() => {
+    console.log("[ROI Cron] Initial server startup ROI distribution check...");
+    distributeRoi().catch(err => console.error("[ROI Cron] Startup distribution error:", err));
+  }, 5000);
+
+  // 3. Periodic safety check every 30 minutes to catch missed runs if server slept/restarted
+  setInterval(() => {
+    distributeRoi().catch(err => console.error("[ROI Cron] Periodic distribution error:", err));
+  }, 30 * 60 * 1000);
+
+  console.log("[ROI Cron] Daily ROI cron job, startup check, and periodic safety check active.");
 };
