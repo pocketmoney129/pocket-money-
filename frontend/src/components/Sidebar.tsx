@@ -92,8 +92,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       title: "WALLET",
       icon: CreditCard,
       items: [
-        { name: "Withdraw Money", path: "/dashboard/withdraw", icon: ArrowUpCircle },
-        { name: "Wallet History", path: "/dashboard/wallet", icon: Wallet }
+        { name: "Withdraw", path: "/dashboard/withdraw", icon: ArrowUpCircle },
+        { name: "Withdrawal History", path: "/dashboard/wallet", icon: Wallet }
       ]
     },
     {

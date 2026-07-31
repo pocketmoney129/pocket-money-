@@ -57,8 +57,8 @@ export default function WithdrawPage() {
       
       if (settingsRes.success) {
         setSysSettings({
-          minWithdraw: 200, 
-          maxWithdraw: 50000,
+          minWithdraw: 1, 
+          maxWithdraw: 1000000,
           withdrawalFeePercent: 5
         });
       }
@@ -100,8 +100,8 @@ export default function WithdrawPage() {
       return;
     }
 
-    if (numAmount < (sysSettings?.minWithdraw || 200) || numAmount > (sysSettings?.maxWithdraw || 50000)) {
-      setError(`Amount must be between ₹${(sysSettings?.minWithdraw || 200).toLocaleString()} and ₹${(sysSettings?.maxWithdraw || 50000).toLocaleString()}`);
+    if (numAmount < (sysSettings?.minWithdraw || 1)) {
+      setError(`Amount must be at least ₹${(sysSettings?.minWithdraw || 1).toLocaleString()}`);
       return;
     }
 
@@ -253,10 +253,8 @@ export default function WithdrawPage() {
               <div>
                 <p>Withdrawal Guidelines:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1 text-blue-450 font-medium">
-                  <li>Minimum withdrawal: ₹200</li>
-                  <li>Maximum withdrawal: ₹50,000</li>
+                  <li>Minimum withdrawal: ₹1</li>
                   <li>Processing charge: {chargePercent}% flat fee</li>
-                  <li>KYC document verification is mandatory</li>
                 </ul>
               </div>
             </div>

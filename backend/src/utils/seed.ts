@@ -27,8 +27,8 @@ const seedDatabase = async () => {
         sitePhone: "+1234567890",
         minDeposit: 100,
         maxDeposit: 100000,
-        minWithdraw: 200,
-        maxWithdraw: 50000,
+        minWithdraw: 1,
+        maxWithdraw: 1000000,
         withdrawalFeePercent: 5,
         upiId: "pocketmoneyhelp129@okaxis",
         bankTransferDetails: {

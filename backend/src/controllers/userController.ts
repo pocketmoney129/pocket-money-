@@ -549,8 +549,8 @@ export const getPaymentSettings = async (req: AuthRequest, res: Response): Promi
         qrCodeImage: "",
         minDeposit: 100,
         maxDeposit: 100000,
-        minWithdraw: 200,
-        maxWithdraw: 50000,
+        minWithdraw: 1,
+        maxWithdraw: 1000000,
         withdrawalFeePercent: 5,
         allowMultipleActivePackages: false
       };

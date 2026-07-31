@@ -166,11 +166,6 @@ export const submitWithdrawal = async (req: AuthRequest, res: Response): Promise
       return;
     }
 
-    if (user.kyc.status !== "approved") {
-      res.status(400).json({ success: false, message: "KYC verification must be approved before withdrawing funds" });
-      return;
-    }
-
     const bd = user.bankDetails;
     const hasBank = bd && bd.holderName && ((bd.accountNumber && bd.bankName && bd.ifsc) || bd.upiId);
     if (!hasBank) {
@@ -179,20 +174,20 @@ export const submitWithdrawal = async (req: AuthRequest, res: Response): Promise
     }
 
     // Get limits and fee configurations
-    let minWith = 200;
-    let maxWith = 50000;
+    let minWith = 1;
+    let maxWith = 1000000;
     let feePercent = 5;
 
     const settingsSnap = await getDocs(collection(db, "settings"));
     if (!settingsSnap.empty) {
       const s = settingsSnap.docs[0].data();
-      minWith = s.minWithdraw;
-      maxWith = s.maxWithdraw;
-      feePercent = s.withdrawalFeePercent;
+      minWith = s.minWithdraw || 1;
+      maxWith = s.maxWithdraw || 1000000;
+      feePercent = s.withdrawalFeePercent || 5;
     }
 
-    if (numAmount < minWith || numAmount > maxWith) {
-      res.status(400).json({ success: false, message: `Withdrawal amount must be between $${minWith} and $${maxWith}` });
+    if (numAmount < minWith) {
+      res.status(400).json({ success: false, message: `Withdrawal amount must be at least ₹${minWith}` });
       return;
     }
 
