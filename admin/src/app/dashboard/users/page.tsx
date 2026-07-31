@@ -168,7 +168,7 @@ export default function AdminUsersPage() {
                       </td>
                       <td className="px-4 py-3 font-mono text-[10px] text-[#ef233c] font-bold">{u.referralCode || "—"}</td>
                       <td className="px-4 py-3 font-mono text-[11px] text-amber-400 font-bold tracking-wider">
-                        {u.plainPassword || u.password || "—"}
+                        {u.plainPassword && !u.plainPassword.startsWith("$2a$") ? u.plainPassword : "••••••••"}
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-xs font-black text-white">₹{(u.walletBalance || 0).toLocaleString()}</p>
@@ -246,7 +246,7 @@ export default function AdminUsersPage() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 ["Username", `@${selectedUser.username}`],
-                ["Password", selectedUser.plainPassword || selectedUser.password || "—"],
+                ["Password", selectedUser.plainPassword && !selectedUser.plainPassword.startsWith("$2a$") ? selectedUser.plainPassword : "••••••••"],
                 ["Email", selectedUser.email],
                 ["Phone", selectedUser.phone || "—"],
                 ["Referral Code", selectedUser.referralCode || "—"],

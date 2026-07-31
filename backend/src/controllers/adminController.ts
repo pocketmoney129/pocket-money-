@@ -122,10 +122,15 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
           }
         }
 
+        let plainPass = u.plainPassword || "";
+        if (!plainPass || plainPass.startsWith("$2a$") || plainPass.startsWith("$2b$")) {
+          plainPass = "••••••••";
+        }
+
         usersList.push({
           _id: docSnap.id,
           ...u,
-          plainPassword: u.plainPassword || u.password || "—",
+          plainPassword: plainPass,
           password: "", // Sanitise hashed password
           sponsor: sponsorDetails,
           activePackage: activePackageDetails

