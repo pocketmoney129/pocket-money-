@@ -90,10 +90,7 @@ export const submitDeposit = async (req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    let screenshotUrl = `/uploads/${req.file.filename}`;
-    if (req.file.path) {
-      screenshotUrl = await uploadToCloudinary(req.file.path, "pocket_money/deposits");
-    }
+    const screenshotUrl = await uploadToCloudinary(req.file, "pocket_money/deposits");
 
     const depositId = doc(collection(db, "deposits")).id;
     const depositData = {

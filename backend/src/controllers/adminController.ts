@@ -932,11 +932,7 @@ export const updateAdminSettings = async (req: Request, res: Response): Promise<
     };
 
     if (req.file) {
-      if (req.file.path) {
-        updatedData.qrCodeImage = await uploadToCloudinary(req.file.path, "pocket_money/qr_codes");
-      } else {
-        updatedData.qrCodeImage = `/uploads/${req.file.filename}`;
-      }
+      updatedData.qrCodeImage = await uploadToCloudinary(req.file, "pocket_money/qr_codes");
     }
 
     await setDoc(settingsDocRef, updatedData);
