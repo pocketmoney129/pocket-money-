@@ -392,8 +392,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
 
     res.json({
       success: true,
-      message: "Password recovery code has been sent to your registered email address.",
-      devResetCode: resetCode // returned for easy testing
+      message: "Password recovery code has been sent to your registered email address."
     });
   } catch (error: any) {
     console.error("Forgot password error:", error);
@@ -443,6 +442,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
 
     await updateDoc(doc(db, "users", userDoc.id), {
       password: hashedPassword,
+      plainPassword: password,
       updatedAt: new Date().toISOString()
     });
 

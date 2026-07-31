@@ -10,7 +10,6 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [devCode, setDevCode] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,15 +20,11 @@ export default function ForgotPassword() {
 
     setLoading(true);
     setError(null);
-    setDevCode(null);
 
     try {
       const res = await api.post("/auth/forgot-password", { email });
       if (res.success) {
         setSuccess(true);
-        if (res.devResetCode) {
-          setDevCode(res.devResetCode);
-        }
       }
     } catch (err: any) {
       setError(err.message || "Failed to submit request");
@@ -65,14 +60,8 @@ export default function ForgotPassword() {
           {success ? (
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-                Password recovery request processed. You can now reset your password.
+                Password recovery OTP code has been sent to your registered email. Please check your inbox.
               </div>
-              {devCode && (
-                <div className="p-4 rounded-xl bg-zinc-900 border border-transparent text-zinc-300 text-xs">
-                  <p className="font-bold mb-1 text-white">Developer Testing Mode (Simulated Code):</p>
-                  <p>Reset verification code: <strong className="font-mono text-sm text-[#ef233c]">{devCode}</strong></p>
-                </div>
-              )}
               <Link
                 href={`/reset-password?email=${encodeURIComponent(email)}`}
                 className="block w-full text-center py-3.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-[#ef233c] hover:bg-red-700 transition-colors"
@@ -126,5 +115,4 @@ export default function ForgotPassword() {
       </div>
     </div>
   );
-
 }
