@@ -598,37 +598,20 @@ export default function DashboardOverview() {
               <p className="text-xs text-zinc-450">Scan code to register under your sponsor node</p>
             </div>
 
-            {/* Glowing Mock QR Code Graphic */}
+            {/* Real Scannable QR Code */}
             <div className="flex justify-center">
-              <div className="w-48 h-48 bg-white p-3 rounded-2xl shadow-[0_0_20px_rgba(239,35,60,0.15)] flex items-center justify-center relative overflow-hidden group">
-                {/* Visual Representation of QR Code using styling grid */}
-                <div className="grid grid-cols-5 gap-1.5 w-full h-full opacity-90">
-                  <div className="bg-black rounded-sm border-2 border-black"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm border-2 border-black"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-[#ef233c] rounded-md flex items-center justify-center text-white font-black text-[9px] shadow-sm">P</div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-black rounded-sm border-2 border-black"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-zinc-100 rounded-sm"></div>
-                  <div className="bg-black rounded-sm"></div>
-                  <div className="bg-black rounded-sm border-2 border-black"></div>
-                </div>
+              <div className="w-48 h-48 bg-white p-3 rounded-2xl shadow-[0_0_20px_rgba(239,35,60,0.15)] flex items-center justify-center relative overflow-hidden">
+                {user?.referralCode ? (
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+                      typeof window !== "undefined" ? `${window.location.origin}/register?ref=${user.referralCode}` : ""
+                    )}`}
+                    alt={`Sponsor QR Code - ${user.referralCode}`}
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                ) : (
+                  <Loader2 className="animate-spin text-zinc-400" size={24} />
+                )}
               </div>
             </div>
 

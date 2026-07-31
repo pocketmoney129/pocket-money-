@@ -185,37 +185,32 @@ export default function ReferAndEarn() {
             <p className="text-[10px] text-zinc-500 font-semibold uppercase">Scan to sign up directly</p>
           </div>
 
-          <div className="p-3 bg-white rounded-2xl shadow-lg border border-zinc-100 flex items-center justify-center w-36 h-36">
-            <div className="grid grid-cols-5 gap-1.5 w-full h-full opacity-90">
-              <div className="bg-black rounded-sm border-2 border-black"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm border-2 border-black"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-[#ef233c] rounded-md flex items-center justify-center text-white font-black text-[9px] shadow-sm">P</div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-black rounded-sm border-2 border-black"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-zinc-100 rounded-sm"></div>
-              <div className="bg-black rounded-sm"></div>
-              <div className="bg-black rounded-sm border-2 border-black"></div>
-            </div>
+          <div className="p-3 bg-white rounded-2xl shadow-lg border border-zinc-100 flex items-center justify-center w-36 h-36 relative overflow-hidden">
+            {getReferralLink() ? (
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(getReferralLink())}`}
+                alt={`Sponsor QR Code - ${user?.referralCode}`}
+                className="w-full h-full object-contain rounded-lg"
+              />
+            ) : (
+              <Loader2 className="animate-spin text-zinc-400" size={24} />
+            )}
           </div>
 
-          <span className="text-[10px] text-zinc-550 font-bold font-mono">CODE: {user?.referralCode}</span>
+          <div className="space-y-1">
+            <span className="text-[10px] text-zinc-400 font-bold font-mono block">CODE: <span className="text-[#ef233c]">{user?.referralCode}</span></span>
+            {getReferralLink() && (
+              <a
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(getReferralLink())}`}
+                target="_blank"
+                rel="noreferrer"
+                download={`PocketMoney_QR_${user?.referralCode}.png`}
+                className="text-[9px] font-bold text-cyan-400 hover:text-cyan-300 underline block"
+              >
+                Download QR Code
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
