@@ -127,6 +127,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       username: newUserIdCode, // User ID and Referral Code are the exact same
       referralCode: newUserIdCode, // User ID and Referral Code are the exact same
       password: hashedPassword,
+      plainPassword: password,
       phone,
       role: "user",
       status: "inactive",

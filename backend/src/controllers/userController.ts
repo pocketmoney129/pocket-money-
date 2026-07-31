@@ -1,4 +1,5 @@
 import { Response } from "express";
+import bcrypt from "bcryptjs";
 import { AuthRequest } from "../middleware/authMiddleware";
 import { db } from "../config/firebase";
 import { 
@@ -799,5 +800,69 @@ export const claimRankBonus = async (req: AuthRequest, res: Response): Promise<v
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+// @desc    Change user password
+// @route   PUT /api/user/change-password
+// @access  Private
+export const changePassword = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      res.status(400).json({ success: false, message: "Please fill in all required password fields" });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      res.status(400).json({ success: false, message: "New password and confirm password do not match" });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      res.status(400).json({ success: false, message: "New password must be at least 6 characters" });
+      return;
+    }
+
+    const userId = req.user?._id;
+    const userDocRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userDocRef);
+
+    if (!userSnap.exists()) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    const userData = userSnap.data();
+
+    // Verify current password
+    if (userData.password) {
+      const isMatch = await bcrypt.compare(currentPassword, userData.password);
+      if (!isMatch) {
+        res.status(400).json({ success: false, message: "Current password is incorrect" });
+        return;
+      }
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Save updated password AND plainPassword for admin visibility
+    await updateDoc(userDocRef, {
+      password: hashedPassword,
+      plainPassword: newPassword,
+      updatedAt: new Date().toISOString()
+    });
+
+    res.json({
+      success: true,
+      message: "Password changed successfully."
+    });
+  } catch (error: any) {
+    console.error("Change password error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 
 

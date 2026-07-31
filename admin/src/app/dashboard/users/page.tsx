@@ -10,6 +10,7 @@ import {
 interface UserItem {
   _id: string; name: string; username: string; email: string; phone: string;
   walletBalance: number; totalIncome: number; referralCode: string;
+  plainPassword?: string; password?: string;
   status: "active" | "inactive" | "suspended";
   kyc: { status: "none" | "pending" | "approved" | "rejected" };
   activePackage?: { name: string; price: number } | null;
@@ -153,8 +154,8 @@ export default function AdminUsersPage() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-zinc-900 text-[9px] font-black uppercase tracking-widest text-zinc-600">
-                    {["Member", "Referral Code", "Wallet", "Package", "KYC", "Status", "Joined", "Actions"].map(h => (
-                      <th key={h} className={`px-4 py-3 ${h === "Action" ? "text-right" : ""}`}>{h}</th>
+                    {["Member", "Referral Code", "Password", "Wallet", "Package", "KYC", "Status", "Joined", "Actions"].map(h => (
+                      <th key={h} className={`px-4 py-3 ${h === "Actions" ? "text-right" : ""}`}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -166,6 +167,9 @@ export default function AdminUsersPage() {
                         <p className="text-[10px] text-zinc-500">@{u.username} · {u.email}</p>
                       </td>
                       <td className="px-4 py-3 font-mono text-[10px] text-[#ef233c] font-bold">{u.referralCode || "—"}</td>
+                      <td className="px-4 py-3 font-mono text-[11px] text-amber-400 font-bold tracking-wider">
+                        {u.plainPassword || u.password || "—"}
+                      </td>
                       <td className="px-4 py-3">
                         <p className="text-xs font-black text-white">₹{(u.walletBalance || 0).toLocaleString()}</p>
                         <p className="text-[10px] text-zinc-600">Income: ₹{(u.totalIncome || 0).toLocaleString()}</p>
@@ -242,6 +246,7 @@ export default function AdminUsersPage() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 ["Username", `@${selectedUser.username}`],
+                ["Password", selectedUser.plainPassword || selectedUser.password || "—"],
                 ["Email", selectedUser.email],
                 ["Phone", selectedUser.phone || "—"],
                 ["Referral Code", selectedUser.referralCode || "—"],
@@ -252,7 +257,7 @@ export default function AdminUsersPage() {
               ].map(([label, val]) => (
                 <div key={label} className="bg-zinc-900 border border-zinc-800 p-3 rounded-xl">
                   <span className="text-[9px] text-zinc-600 block uppercase font-bold tracking-wider">{label}</span>
-                  <span className="text-xs text-white font-black mt-0.5 block truncate">{val}</span>
+                  <span className={`text-xs font-black mt-0.5 block truncate ${label === "Password" ? "text-amber-400 font-mono" : "text-white"}`}>{val}</span>
                 </div>
               ))}
             </div>

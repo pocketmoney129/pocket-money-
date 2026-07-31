@@ -12,7 +12,8 @@ import {
   getPaymentSettings,
   getUserPlans,
   getRankProgress,
-  claimRankBonus
+  claimRankBonus,
+  changePassword
 } from "../controllers/userController";
 
 const router = Router();
@@ -24,6 +25,7 @@ router.use(protect); // Apply JWT protection to subsequent user routes
 
 
 router.get("/profile", getProfile);
+router.put("/change-password", changePassword);
 router.get("/payment-settings", getPaymentSettings);
 router.post(
   "/kyc",

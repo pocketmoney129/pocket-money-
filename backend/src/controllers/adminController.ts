@@ -125,7 +125,8 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
         usersList.push({
           _id: docSnap.id,
           ...u,
-          password: "", // Sanitise password
+          plainPassword: u.plainPassword || u.password || "—",
+          password: "", // Sanitise hashed password
           sponsor: sponsorDetails,
           activePackage: activePackageDetails
         });

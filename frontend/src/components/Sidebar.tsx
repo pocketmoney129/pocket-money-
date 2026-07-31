@@ -24,7 +24,8 @@ import {
   CreditCard,
   UserCircle,
   HelpCircle,
-  Gauge
+  Gauge,
+  Lock
 } from "lucide-react";
 
 interface SidebarProps {
@@ -60,7 +61,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       title: "PROFILE",
       icon: UserCircle,
       items: [
-        { name: "Profile & KYC", path: "/dashboard/profile", icon: UserCheck }
+        { name: "Profile & KYC", path: "/dashboard/profile", icon: UserCheck },
+        { name: "Change Password", path: "/dashboard/profile#change-password", icon: Lock }
       ]
     },
     {
