@@ -91,9 +91,9 @@ function ResetPasswordForm() {
             <input
               type="email"
               required
+              readOnly
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="block w-full px-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all"
+              className="block w-full px-4 py-2.5 border border-zinc-800/60 rounded-xl bg-zinc-900/50 text-zinc-400 font-mono text-sm cursor-not-allowed select-none focus:outline-none"
             />
           </div>
 
