@@ -25,22 +25,25 @@ import {
   UserCircle,
   HelpCircle,
   Gauge,
-  Lock
+  Lock,
+  Building2
 } from "lucide-react";
 
 interface SidebarProps {
   onClose?: () => void;
 }
 
+interface NavItem {
+  name: string;
+  path: string;
+  icon: React.ElementType;
+}
+
 interface NavGroup {
   id: string;
   title: string;
   icon: React.ElementType;
-  items: {
-    name: string;
-    path: string;
-    icon: React.ElementType;
-  }[];
+  items: NavItem[];
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
@@ -61,8 +64,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       title: "PROFILE",
       icon: UserCircle,
       items: [
-        { name: "Profile & KYC", path: "/dashboard/profile", icon: UserCheck },
-        { name: "Change Password", path: "/dashboard/profile#change-password", icon: Lock }
+        { name: "Account Profile Info", path: "/dashboard/profile", icon: UserCheck },
+        { name: "Bank Details & UPI", path: "/dashboard/profile#bank-details", icon: Building2 },
+        { name: "Update Password", path: "/dashboard/profile#change-password", icon: Lock }
       ]
     },
     {
@@ -153,17 +157,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           <p className="text-[11px] text-zinc-400 font-mono font-semibold truncate">@{user?.username || user?.referralCode || "PM5001"}</p>
 
           <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-            <span
-              className={`inline-flex items-center gap-1 text-[9px] font-black px-1.5 py-0.5 rounded ${
-                user?.kyc?.status === "approved"
-                  ? "bg-emerald-500/10 text-emerald-400"
-                  : "bg-amber-500/10 text-amber-400"
-              }`}
-            >
-              <ShieldCheck size={9} className="shrink-0" />
-              <span>{user?.kyc?.status === "approved" ? "KYC Approved" : "KYC Pending"}</span>
-            </span>
-
             <span
               className={`inline-flex items-center gap-1 text-[9px] font-black px-1.5 py-0.5 rounded ${
                 user?.status === "active"
