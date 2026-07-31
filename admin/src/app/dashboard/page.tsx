@@ -5,7 +5,7 @@ import { api } from "../../services/api";
 import {
   Users, ShieldAlert, ArrowDownCircle, ArrowUpCircle,
   TrendingUp, Ticket, Loader2, PlayCircle, CheckCircle,
-  XCircle, LayoutDashboard, WrenchIcon, AlertTriangle, Wifi, WifiOff
+  XCircle, LayoutDashboard, WrenchIcon, AlertTriangle, Wifi, WifiOff, DollarSign, Calendar
 } from "lucide-react";
 
 interface AdminStats {
@@ -19,6 +19,9 @@ interface AdminStats {
   pendingKYC: number;
   pendingTickets: number;
   platformEarnings: number;
+  todayEarning: number;
+  todayDeposits: number;
+  todayWithdrawals: number;
 }
 
 interface StatCardProps {
@@ -118,12 +121,13 @@ export default function AdminOverview() {
   };
 
   const statCards = [
+    { title: "Today's Earning", value: `₹${(stats?.todayEarning || 0).toLocaleString()}`, icon: DollarSign, color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20", sub: "Deposits collected today" },
     { title: "Total Members", value: stats?.totalUsers || 0, icon: Users, color: "text-blue-400 bg-blue-400/10 border-blue-400/20", sub: "All registered accounts" },
     { title: "Active Members", value: stats?.activeUsers || 0, icon: Users, color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20", sub: "Users with active plans" },
     { title: "Suspended Accounts", value: stats?.suspendedUsers || 0, icon: ShieldAlert, color: "text-rose-400 bg-rose-400/10 border-rose-400/20", sub: "Restricted access" },
     { title: "Approved Deposits", value: `₹${(stats?.approvedDeposits || 0).toLocaleString()}`, icon: ArrowDownCircle, color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20", sub: "Total funds received" },
     { title: "Approved Withdrawals", value: `₹${(stats?.approvedWithdrawals || 0).toLocaleString()}`, icon: ArrowUpCircle, color: "text-rose-400 bg-rose-400/10 border-rose-400/20", sub: "Total paid out" },
-    { title: "Platform Revenue", value: `₹${(stats?.platformEarnings || 0).toLocaleString()}`, icon: TrendingUp, color: "text-[#ef233c] bg-[#ef233c]/10 border-[#ef233c]/20", sub: "Deposits minus withdrawals" },
+    { title: "Platform Revenue", value: `₹${(stats?.platformEarnings || 0).toLocaleString()}`, icon: TrendingUp, color: "text-[#ef233c] bg-[#ef233c]/10 border-[#ef233c]/20", sub: "Withdrawal processing fees" },
     { title: "Pending KYC", value: stats?.pendingKYC || 0, icon: ShieldAlert, color: "text-amber-400 bg-amber-400/10 border-amber-400/20", sub: "Awaiting verification" },
     { title: "Open Tickets", value: stats?.pendingTickets || 0, icon: Ticket, color: "text-purple-400 bg-purple-400/10 border-purple-400/20", sub: "Support queue size" },
   ];

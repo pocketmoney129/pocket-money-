@@ -31,12 +31,24 @@ export const getAdminStats = async (req: Request, res: Response): Promise<void> 
       if (u.kyc?.status === "pending") pendingKYC++;
     });
 
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayISO = todayStart.toISOString();
+
     const depositsSnap = await getDocs(collection(db, "deposits"));
     let approvedDeposits = 0;
     let pendingDeposits = 0;
+    let todayDeposits = 0;
+
     depositsSnap.forEach(docSnap => {
       const d = docSnap.data();
-      if (d.status === "approved") approvedDeposits += d.amount;
+      if (d.status === "approved") {
+        approvedDeposits += d.amount || 0;
+        const depDate = d.processedAt || d.createdAt;
+        if (depDate && depDate >= todayISO) {
+          todayDeposits += d.amount || 0;
+        }
+      }
       if (d.status === "pending") pendingDeposits++;
     });
 
@@ -44,17 +56,25 @@ export const getAdminStats = async (req: Request, res: Response): Promise<void> 
     let approvedWithdrawals = 0;
     let pendingWithdrawals = 0;
     let platformEarnings = 0;
+    let todayWithdrawals = 0;
+
     withdrawalsSnap.forEach(docSnap => {
       const w = docSnap.data();
       if (w.status === "approved") {
-        approvedWithdrawals += w.amount;
+        approvedWithdrawals += w.amount || 0;
         platformEarnings += w.charge || 0;
+        const wDate = w.processedAt || w.createdAt;
+        if (wDate && wDate >= todayISO) {
+          todayWithdrawals += w.amount || 0;
+        }
       }
       if (w.status === "pending") pendingWithdrawals++;
     });
 
     const ticketsSnap = await getDocs(query(collection(db, "support_tickets"), where("status", "==", "open")));
     const pendingTickets = ticketsSnap.size;
+
+    const todayEarning = todayDeposits;
 
     res.json({
       success: true,
@@ -68,7 +88,10 @@ export const getAdminStats = async (req: Request, res: Response): Promise<void> 
         pendingWithdrawals,
         pendingKYC,
         pendingTickets,
-        platformEarnings
+        platformEarnings,
+        todayEarning,
+        todayDeposits,
+        todayWithdrawals
       }
     });
   } catch (error: any) {
