@@ -45,7 +45,6 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
 
   const menuItems = [
     { name: "Overview", path: "/dashboard", icon: LayoutDashboard },
-    { name: "KYC Verifications", path: "/dashboard/kyc", icon: ShieldCheck },
     { name: "User Directory", path: "/dashboard/users", icon: Users },
     { name: "Rank Progression", path: "/dashboard/ranks", icon: Trophy },
     { name: "Deposit Approvals", path: "/dashboard/deposits", icon: ArrowDownCircle },

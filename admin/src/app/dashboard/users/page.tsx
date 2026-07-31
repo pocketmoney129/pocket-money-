@@ -310,7 +310,7 @@ export default function AdminUsersPage() {
             </div>
           </div>
         </div>
-      )}\n
+      )}
       {/* Delete Confirmation Modal */}
       {confirmDeleteUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">

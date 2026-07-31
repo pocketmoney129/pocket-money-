@@ -128,7 +128,6 @@ export default function AdminOverview() {
     { title: "Approved Deposits", value: `₹${(stats?.approvedDeposits || 0).toLocaleString()}`, icon: ArrowDownCircle, color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20", sub: "Total funds received" },
     { title: "Approved Withdrawals", value: `₹${(stats?.approvedWithdrawals || 0).toLocaleString()}`, icon: ArrowUpCircle, color: "text-rose-400 bg-rose-400/10 border-rose-400/20", sub: "Total paid out" },
     { title: "Platform Revenue", value: `₹${(stats?.platformEarnings || 0).toLocaleString()}`, icon: TrendingUp, color: "text-[#ef233c] bg-[#ef233c]/10 border-[#ef233c]/20", sub: "Withdrawal processing fees" },
-    { title: "Pending KYC", value: stats?.pendingKYC || 0, icon: ShieldAlert, color: "text-amber-400 bg-amber-400/10 border-amber-400/20", sub: "Awaiting verification" },
     { title: "Open Tickets", value: stats?.pendingTickets || 0, icon: Ticket, color: "text-purple-400 bg-purple-400/10 border-purple-400/20", sub: "Support queue size" },
   ];
 
