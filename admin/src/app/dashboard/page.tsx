@@ -100,6 +100,23 @@ export default function AdminOverview() {
     );
   }
 
+  const handleTriggerRoi = async () => {
+    setRoiLoading(true);
+    setRoiResult(null);
+    setRoiError(null);
+    try {
+      const res = await api.post("/admin/distribute-roi", {});
+      if (res.success) {
+        setRoiResult(res.message || `Daily ROI distributed. Credited: ${res.data?.credited || 0}, Skipped: ${res.data?.skipped || 0}`);
+        fetchStats();
+      }
+    } catch (e: any) {
+      setRoiError(e.message || "Failed to distribute daily ROI");
+    } finally {
+      setRoiLoading(false);
+    }
+  };
+
   const statCards = [
     { title: "Total Members", value: stats?.totalUsers || 0, icon: Users, color: "text-blue-400 bg-blue-400/10 border-blue-400/20", sub: "All registered accounts" },
     { title: "Active Members", value: stats?.activeUsers || 0, icon: Users, color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20", sub: "Users with active plans" },
@@ -128,6 +145,47 @@ export default function AdminOverview() {
         >
           Refresh
         </button>
+      </div>
+
+      {/* ── Daily ROI Manual Execution Control ───────────────────────── */}
+      <div className="bg-zinc-950/80 backdrop-blur-md border border-[#ef233c]/30 rounded-2xl p-6 space-y-3 shadow-xl shadow-[#ef233c]/5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+              <TrendingUp size={20} />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm text-white flex items-center gap-2">
+                Daily ROI Distribution Engine
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black border bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
+                  AUTO-CRON ACTIVE
+                </span>
+              </h4>
+              <p className="text-xs text-zinc-400 mt-1">
+                Distributes daily plan returns to all active members. Runs automatically on user login & 12:01 AM IST.
+              </p>
+              {roiResult && (
+                <p className="text-xs font-bold text-emerald-400 mt-2 flex items-center gap-1.5">
+                  <CheckCircle size={12} /> {roiResult}
+                </p>
+              )}
+              {roiError && (
+                <p className="text-xs font-bold text-rose-400 mt-2 flex items-center gap-1.5">
+                  <XCircle size={12} /> {roiError}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={handleTriggerRoi}
+            disabled={roiLoading}
+            className="flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black text-white bg-gradient-to-r from-amber-500 via-[#ef233c] to-rose-600 hover:from-amber-600 hover:to-rose-700 transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 shrink-0 cursor-pointer"
+          >
+            {roiLoading ? <Loader2 size={16} className="animate-spin" /> : <PlayCircle size={16} />}
+            {roiLoading ? "Processing Daily ROI..." : "⚡ Run Daily ROI Now"}
+          </button>
+        </div>
       </div>
 
       {/* Stats Grid */}

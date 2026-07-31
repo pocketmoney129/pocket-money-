@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAdminAuth } from "../../context/AdminAuthContext";
+import { api } from "../../services/api";
 import {
   LayoutDashboard,
   ShieldCheck,
@@ -17,13 +18,29 @@ import {
   Menu,
   X,
   Loader2,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from "lucide-react";
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   const { admin, loading, logout } = useAdminAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [headerRoiLoading, setHeaderRoiLoading] = useState(false);
   const pathname = usePathname();
+
+  const handleHeaderRoi = async () => {
+    setHeaderRoiLoading(true);
+    try {
+      const res = await api.post("/admin/distribute-roi", {});
+      if (res.success) {
+        alert(`✅ ${res.message || "Daily ROI distributed successfully."}`);
+      }
+    } catch (e: any) {
+      alert(`❌ Failed: ${e.message || "ROI distribution error"}`);
+    } finally {
+      setHeaderRoiLoading(false);
+    }
+  };
 
   const menuItems = [
     { name: "Overview", path: "/dashboard", icon: LayoutDashboard },
@@ -158,7 +175,16 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 bg-zinc-950 border border-zinc-900 rounded-xl px-3 py-1.5">
+            <button
+              onClick={handleHeaderRoi}
+              disabled={headerRoiLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-[#ef233c] to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white text-[10px] font-black shadow-md shadow-amber-500/20 transition-all disabled:opacity-50 cursor-pointer"
+            >
+              {headerRoiLoading ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />}
+              <span>⚡ Run Daily ROI Now</span>
+            </button>
+
+            <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-zinc-500 bg-zinc-950 border border-zinc-900 rounded-xl px-3 py-1.5">
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
               System Online
             </div>
