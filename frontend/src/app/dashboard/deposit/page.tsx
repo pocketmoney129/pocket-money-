@@ -291,7 +291,7 @@ export default function DepositPage() {
   return (
     <div className="space-y-8 font-sans text-zinc-300 relative">
       <div>
-        <h2 className="text-xl sm:text-2xl font-black text-white font-manrope">Earning Plan Payments</h2>
+        <h2 className="text-xl sm:text-2xl font-black text-white font-manrope">Earning Plans </h2>
         <p className="text-xs text-zinc-450 font-semibold mt-1">Select a package tier, make the payment, and submit screenshot receipt for account activation.</p>
       </div>
 

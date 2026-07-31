@@ -95,11 +95,6 @@ export default function WithdrawPage() {
       return;
     }
 
-    if (user?.kyc?.status !== "approved") {
-      setError("KYC verification must be approved before withdrawing funds.");
-      return;
-    }
-
     if (!hasBankDetails) {
       setError("Please save bank details or UPI ID in your Profile first.");
       return;
@@ -175,16 +170,10 @@ export default function WithdrawPage() {
                 </div>
               )}
 
-              {user?.kyc?.status !== "approved" && (
-                <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-400">
-                  ⚠️ KYC is not approved (Current: {user?.kyc?.status || "None"}). Please submit your identity proof under <strong>Profile & KYC</strong> and wait for admin approval.
-                </div>
-              )}
-
               {!hasBankDetails && (
                 <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs font-semibold text-rose-400 flex justify-between items-center">
                   <span>⚠️ No Bank Transfer/UPI details found on your profile.</span>
-                  <Link href="/dashboard/profile" className="underline text-[#ef233c] font-bold hover:text-red-400">Configure now</Link>
+                  <Link href="/dashboard/profile/bank" className="underline text-[#ef233c] font-bold hover:text-red-400">Configure now</Link>
                 </div>
               )}
 
@@ -199,7 +188,7 @@ export default function WithdrawPage() {
                       type="number"
                       required
                       placeholder="e.g. 500"
-                      disabled={user?.status !== "active" || user?.kyc?.status !== "approved" || !hasBankDetails}
+                      disabled={user?.status !== "active" || !hasBankDetails}
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl bg-zinc-900/90 text-white placeholder-zinc-600 focus:outline-none focus:ring-1 focus:ring-[#ef233c] text-sm transition-all disabled:opacity-50"
@@ -238,7 +227,7 @@ export default function WithdrawPage() {
 
                 <button
                   type="submit"
-                  disabled={submitting || user?.status !== "active" || user?.kyc?.status !== "approved" || !hasBankDetails}
+                  disabled={submitting || user?.status !== "active" || !hasBankDetails}
                   className="w-full py-3.5 bg-[#ef233c] hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {submitting ? <Loader2 className="animate-spin" size={16} /> : "Submit Payout Request"}
