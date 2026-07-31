@@ -74,6 +74,10 @@ function ResetPasswordForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold leading-relaxed">
+            Password recovery OTP code has been sent to your registered email. Please check your inbox or spam section
+          </div>
+
           {error && (
             <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">
               {error}

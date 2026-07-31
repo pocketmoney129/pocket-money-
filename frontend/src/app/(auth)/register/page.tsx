@@ -251,7 +251,7 @@ function RegisterForm() {
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+91 9876543210"
+              placeholder="1234567890"
               className="block w-full pl-10 pr-4 py-2.5 border border-transparent rounded-xl bg-zinc-900/80 text-white placeholder-zinc-500 focus:border-[#ef233c] focus:ring-1 focus:ring-[#ef233c] focus:shadow-[0_0_12px_rgba(239,35,60,0.12)] focus:outline-none text-sm transition-all font-mono"
             />
           </div>
@@ -271,7 +271,7 @@ function RegisterForm() {
               required
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-              placeholder="e.g. PM5001 or admin"
+              placeholder="e.g. PM8596"
               className={`block w-full pl-10 pr-10 py-2.5 border rounded-xl bg-zinc-900/80 font-semibold placeholder-zinc-500 focus:outline-none text-sm transition-all font-mono ${
                 sponsorName
                   ? "border-emerald-500 text-emerald-400 focus:border-emerald-400 focus:shadow-[0_0_12px_rgba(16,185,129,0.12)]"
@@ -301,7 +301,7 @@ function RegisterForm() {
           )}
           {!sponsorName && !sponsorError && (
             <p className="text-[10px] text-zinc-500 mt-1 font-medium">
-              Enter your sponsor's Referral Code / User ID (e.g. <span className="text-zinc-400 font-semibold">PM5001</span>).
+              Enter your sponsor's Referral Code / User ID.
             </p>
           )}
         </div>
@@ -325,11 +325,7 @@ function RegisterForm() {
           </div>
         </div>
 
-        {/* Info notice about auto-assigned User ID */}
-        <div className="p-3 bg-zinc-900/60 border border-transparent rounded-xl flex items-center gap-2.5 text-[11px] text-zinc-400">
-          <ShieldCheck size={16} className="text-[#ef233c] shrink-0" />
-          <span>Your official <strong>User ID & Referral Code</strong> (e.g. PM5002) will be auto-generated upon registration.</span>
-        </div>
+        
 
         <div className="pt-2">
           <button
