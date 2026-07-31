@@ -61,7 +61,7 @@ export default function AdminSettingsPage() {
         setBusinessModelTitle(s.businessModelTitle || "");
         setBusinessModelDesc(s.businessModelDesc || "");
         setAllocations(s.businessModelAllocations || []);
-        if (s.qrCodeImage) setQrCodePreview(`${BACKEND}${s.qrCodeImage}`);
+        if (s.qrCodeImage) setQrCodePreview(s.qrCodeImage.startsWith("http") ? s.qrCodeImage : `${BACKEND}${s.qrCodeImage}`);
       }
     } catch { /* silent */ }
     finally { setLoading(false); }

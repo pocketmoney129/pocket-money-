@@ -447,7 +447,7 @@ export default function DepositPage() {
                           <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2 self-start font-semibold">Scan code to pay</span>
                           <div className="w-40 h-40 rounded-2xl overflow-hidden p-2 bg-white flex items-center justify-center shadow-[0_10px_30px_rgba(255,255,255,0.03)]">
                             <img
-                              src={`${backendUrl}${paySettings.qrCodeImage}`}
+                              src={paySettings.qrCodeImage.startsWith("http") ? paySettings.qrCodeImage : `${backendUrl}${paySettings.qrCodeImage}`}
                               alt="Official QR Code"
                               className="max-w-full max-h-full object-contain"
                             />

@@ -11,6 +11,7 @@ import {
   updateDoc 
 } from "firebase/firestore";
 import { sendDepositEmail, sendWithdrawEmail, sendPlanPurchaseEmail } from "../utils/email";
+import { uploadToCloudinary } from "../utils/cloudinary";
 
 
 // @desc    Get dashboard statistics for admin
@@ -931,7 +932,11 @@ export const updateAdminSettings = async (req: Request, res: Response): Promise<
     };
 
     if (req.file) {
-      updatedData.qrCodeImage = `/uploads/${req.file.filename}`;
+      if (req.file.path) {
+        updatedData.qrCodeImage = await uploadToCloudinary(req.file.path, "pocket_money/qr_codes");
+      } else {
+        updatedData.qrCodeImage = `/uploads/${req.file.filename}`;
+      }
     }
 
     await setDoc(settingsDocRef, updatedData);

@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { sendDepositEmail, sendWithdrawEmail } from "../utils/email";
 import { distributeRoi } from "../utils/roiCron";
+import { uploadToCloudinary } from "../utils/cloudinary";
 
 // @desc    Get user's transaction history
 // @route   GET /api/transactions
@@ -89,7 +90,10 @@ export const submitDeposit = async (req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    const screenshotUrl = `/uploads/${req.file.filename}`;
+    let screenshotUrl = `/uploads/${req.file.filename}`;
+    if (req.file.path) {
+      screenshotUrl = await uploadToCloudinary(req.file.path, "pocket_money/deposits");
+    }
 
     const depositId = doc(collection(db, "deposits")).id;
     const depositData = {
