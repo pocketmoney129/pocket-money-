@@ -45,9 +45,40 @@ export default function AdminPackagesPage() {
 
   useEffect(() => { fetchPackages(); }, []);
 
+  const autoCalculateROI = (currentPrice: string, currentPct: string, currentDays: string) => {
+    const numPrice = parseFloat(currentPrice);
+    const numericPct = parseFloat(currentPct.replace("%", "").trim());
+    const numDays = parseInt(currentDays) || 25;
+
+    if (!isNaN(numPrice) && numPrice > 0 && !isNaN(numericPct) && numericPct > 0) {
+      const computedTotal = Math.round((numPrice * numericPct) / 100);
+      setTotalReturn(computedTotal.toString());
+
+      if (numDays > 0) {
+        const computedDaily = parseFloat((computedTotal / numDays).toFixed(2));
+        setDailyRoi(computedDaily.toString());
+      }
+    }
+  };
+
+  const handlePriceChange = (val: string) => {
+    setPrice(val);
+    if (returnPercent) autoCalculateROI(val, returnPercent, expiryDays);
+  };
+
+  const handleReturnPercentChange = (val: string) => {
+    setReturnPercent(val);
+    autoCalculateROI(price, val, expiryDays);
+  };
+
+  const handleExpiryDaysChange = (val: string) => {
+    setExpiryDays(val);
+    if (returnPercent) autoCalculateROI(price, returnPercent, val);
+  };
+
   const openCreate = () => {
     setEditingPkg(null); setName(""); setPrice(""); setDirectCommission("10");
-    setLevelCommissionsStr("5, 3, 2, 1, 1"); setDescription(""); setDailyRoi("");
+    setLevelCommissionsStr(""); setDescription(""); setDailyRoi("");
     setTotalReturn(""); setReturnPercent(""); setExpiryDays("25");
     setError(null); setSuccess(null); setShowModal(true);
   };
@@ -55,7 +86,7 @@ export default function AdminPackagesPage() {
   const openEdit = (pkg: PackageItem) => {
     setEditingPkg(pkg); setName(pkg.name); setPrice(pkg.price.toString());
     setDirectCommission(pkg.directCommission.toString());
-    setLevelCommissionsStr(pkg.levelCommissions.join(", "));
+    setLevelCommissionsStr(pkg.levelCommissions?.join(", ") || "");
     setDescription(pkg.description); setDailyRoi(pkg.dailyRoi?.toString() || "");
     setTotalReturn(pkg.totalReturn?.toString() || ""); setReturnPercent(pkg.returnPercent || "");
     setExpiryDays(pkg.expiryDays?.toString() || "25");
@@ -68,7 +99,7 @@ export default function AdminPackagesPage() {
     setSubmitting(true); setError(null);
     const payload = {
       name, price: parseFloat(price), directCommission: parseFloat(directCommission),
-      levelCommissions: levelCommissionsStr.split(",").map(l => parseFloat(l.trim())).filter(l => !isNaN(l)),
+      levelCommissions: levelCommissionsStr ? levelCommissionsStr.split(",").map(l => parseFloat(l.trim())).filter(l => !isNaN(l)) : [],
       description, dailyRoi: dailyRoi ? parseFloat(dailyRoi) : undefined,
       totalReturn: totalReturn ? parseFloat(totalReturn) : undefined,
       returnPercent: returnPercent || undefined, expiryDays: parseInt(expiryDays) || 25
@@ -231,7 +262,7 @@ export default function AdminPackagesPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={labelCls}>Price (₹) *</label>
-                  <input required type="number" placeholder="999" value={price} onChange={e => setPrice(e.target.value)} className={inputCls} />
+                  <input required type="number" placeholder="999" value={price} onChange={e => handlePriceChange(e.target.value)} className={inputCls} />
                 </div>
                 <div>
                   <label className={labelCls}>Direct Sponsor % *</label>
@@ -245,27 +276,21 @@ export default function AdminPackagesPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className={labelCls}>Daily ROI (₹)</label>
-                    <input type="number" placeholder="e.g. 66" value={dailyRoi} onChange={e => setDailyRoi(e.target.value)} className={inputCls} />
+                    <input type="number" placeholder="e.g. 50" value={dailyRoi} onChange={e => setDailyRoi(e.target.value)} className={inputCls} />
                   </div>
                   <div>
                     <label className={labelCls}>Total Return (₹)</label>
-                    <input type="number" placeholder="e.g. 1650" value={totalReturn} onChange={e => setTotalReturn(e.target.value)} className={inputCls} />
+                    <input type="number" placeholder="e.g. 1300" value={totalReturn} onChange={e => setTotalReturn(e.target.value)} className={inputCls} />
                   </div>
                   <div>
                     <label className={labelCls}>Return % (display)</label>
-                    <input type="text" placeholder="e.g. 65%" value={returnPercent} onChange={e => setReturnPercent(e.target.value)} className={inputCls} />
+                    <input type="text" placeholder="e.g. 65%" value={returnPercent} onChange={e => handleReturnPercentChange(e.target.value)} className={inputCls} />
                   </div>
                   <div>
                     <label className={labelCls}>Expiry (Days)</label>
-                    <input type="number" placeholder="25" value={expiryDays} onChange={e => setExpiryDays(e.target.value)} className={inputCls} />
+                    <input type="number" placeholder="25" value={expiryDays} onChange={e => handleExpiryDaysChange(e.target.value)} className={inputCls} />
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <label className={labelCls}>Level Commissions (comma-separated, L2 to L6) *</label>
-                <input required placeholder="5, 3, 2, 1, 1" value={levelCommissionsStr} onChange={e => setLevelCommissionsStr(e.target.value)} className={inputCls} />
-                <p className="text-[9px] text-zinc-600 mt-1">Enter % for upline levels: L2, L3, L4, L5, L6</p>
               </div>
 
               <div className="flex gap-3 pt-3 border-t border-zinc-800">
